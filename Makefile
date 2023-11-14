@@ -288,13 +288,13 @@ $(foreach target, $(TARGETS), $(call define_target, $(target)))
 # Flash the program
 flash: default
 	@echo Flashing: $(OUTPUT_DIRECTORY)/nrf52811_xxaa.hex
-	./toolchain/nrf-command-line-tools/bin/nrfjprog -f nrf52 --program $(OUTPUT_DIRECTORY)/nrf52811_xxaa.hex --sectorerase
+	./toolchain/nrf-command-line-tools/bin/nrfjprog -f nrf52 --program $(OUTPUT_DIRECTORY)/nrf52811_xxaa.hex --sectorerase --verify
 	./toolchain/nrf-command-line-tools/bin/nrfjprog -f nrf52 --reset
 
 # Flash softdevice
 flash_softdevice:
 	@echo Flashing: s112_nrf52_7.2.0_softdevice.hex
-	./toolchain/nrf-command-line-tools/bin/nrfjprog -f nrf52 --program $(SDK_ROOT)/components/softdevice/s112/hex/s112_nrf52_7.2.0_softdevice.hex --sectorerase
+	./toolchain/nrf-command-line-tools/bin/nrfjprog -f nrf52 --program $(SDK_ROOT)/components/softdevice/s112/hex/s112_nrf52_7.2.0_softdevice.hex --sectorerase --verify
 	./toolchain/nrf-command-line-tools/bin/nrfjprog -f nrf52 --reset
 
 erase:
