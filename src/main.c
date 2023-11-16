@@ -630,7 +630,6 @@ int main(void)
         SgpBleAgent_Process();
         idle_state_handle();
 
-
         if (adv_idle)
         {
             adv_idle = false;

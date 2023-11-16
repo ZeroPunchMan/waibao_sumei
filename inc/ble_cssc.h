@@ -13,9 +13,9 @@ extern "C"
 {
 #endif
 
-#define BLE_CSSC_SERVICE_ID 0xffe0
-#define BLE_CSSC_NOTIFY_ID 0xffe1
-#define BLE_CSSC_WRITE_ID 0xffe2
+#define BLE_CSSC_SERVICE_ID 0x000a
+#define BLE_CSSC_NOTIFY_ID 0x000c
+#define BLE_CSSC_WRITE_ID 0x000b
 
 #define BL_CSSC_DEF(_name)   \
     static ble_cssc_t _name; \

@@ -21,6 +21,7 @@
         "algorithm": "c",
         "limits": "c",
         "nrf_log_ctrl.h": "c",
-        "sgp_ble_agent.h": "c"
+        "sgp_ble_agent.h": "c",
+        "protocol.h": "c"
     }
 }

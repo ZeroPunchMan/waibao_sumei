@@ -1,6 +1,7 @@
 #include "sgp_ble_agent.h"
 #include "cl_queue.h"
 #include "nrf_log.h"
+#include "protocol.h"
 
 extern uint32_t SendWithNotify(const uint8_t *buff, const uint8_t count);
 
@@ -9,24 +10,25 @@ static bool connected = false;
 CL_QUEUE_DEF_INIT(sgpRecv_q, 128, uint8_t, static);
 CL_QUEUE_DEF_INIT(sgpSend_q, 256, uint8_t, static);
 
-// static CL_Result_t SGP_BleSend(const uint8_t *buff, uint16_t count)
-// {
-//     if (!connected)
-//         return CL_ResFailed;
+static CL_Result_t SGP_BleSend(const uint8_t *buff, uint16_t count)
+{
+    if (!connected)
+        return CL_ResFailed;
 
-//     if (CL_QueueFreeSpace(&sgpSend_q) < count)
-//         return CL_ResFailed;
+    if (CL_QueueFreeSpace(&sgpSend_q) < count)
+        return CL_ResFailed;
 
-//     for (uint16_t i = 0; i < count; i++)
-//     {
-//         CL_QueueAdd(&sgpSend_q, (void *)(buff + i));
-//     }
+    for (uint16_t i = 0; i < count; i++)
+    {
+        CL_QueueAdd(&sgpSend_q, (void *)(buff + i));
+    }
 
-//     return CL_ResSuccess;
-// }
+    return CL_ResSuccess;
+}
 
 void SgpBleAgent_Init(void)
 {
+    ProtocolInit(SGP_BleSend);
 }
 
 void SgpBleAgent_Receive(const uint8_t *data, uint8_t length)
@@ -58,7 +60,7 @@ void SgpBleAgent_Process(void)
         if (CL_QueuePoll(&sgpRecv_q, &data) == CL_ResSuccess)
         {
             //receive one byte
-            // SgpParser_RecvByte(SpgChannelHandle_Ble, data);
+            ProtocolRecvByte(data);
         }
         else
         {

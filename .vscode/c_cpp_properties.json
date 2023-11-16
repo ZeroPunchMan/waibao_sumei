@@ -22,7 +22,8 @@
                 "D:/sdk/nrf5_sdk_17.1.0_ddde560/components/libraries/log/src",
                 "D:/sdk/nrf5_sdk_17.1.0_ddde560/components/libraries/atomic",
                 "D:/sdk/nrf5_sdk_17.1.0_ddde560/components/libraries/fds",
-                "D:/sdk/nrf5_sdk_17.1.0_ddde560/components/ble/ble_services/ble_hts"
+                "D:/sdk/nrf5_sdk_17.1.0_ddde560/components/ble/ble_services/ble_hts",
+                "${workspaceFolder}/inc"
             ],
             "defines": [
                 "_DEBUG",
@@ -33,7 +34,7 @@
                 "uint16_t=unsigned short",
                 "int16_t=short",
                 "uint8_t=unsigned char",
-                "int8_t=char",
+                "int8_t=char"
             ],
             "windowsSdkVersion": "10.0.22000.0",
             "compilerPath": "cl.exe",
