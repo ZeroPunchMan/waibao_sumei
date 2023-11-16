@@ -1,0 +1,25 @@
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "clib/.vscode": true,
+        "clib/mcu_testcase": true,
+        "clib/testcase": true,
+        "clib/.gitignore": true,
+        "clib/Makefile": true,
+    },
+    "files.associations": {
+        "nrf_log_default_backends.h": "c",
+        "ble_conn_params.h": "c",
+        "ble_hts.h": "c",
+        "peer_manager_handler.h": "c",
+        "nrf_pwr_mgmt.h": "c",
+        "algorithm": "c",
+        "limits": "c",
+        "nrf_log_ctrl.h": "c"
+    }
+}
