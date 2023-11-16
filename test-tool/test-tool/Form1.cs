@@ -437,8 +437,7 @@ namespace UART_demo
         }
         private void buttonGetVersion_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < 20; i++)
-                SendVersionReq();
+            SendVersionReq();
         }
 
     }
