@@ -20,6 +20,7 @@
         "nrf_pwr_mgmt.h": "c",
         "algorithm": "c",
         "limits": "c",
-        "nrf_log_ctrl.h": "c"
+        "nrf_log_ctrl.h": "c",
+        "sgp_ble_agent.h": "c"
     }
 }

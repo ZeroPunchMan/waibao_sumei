@@ -32,7 +32,7 @@
 #include "systime.h"
 #include "ble_cssc.h"
 #include "cl_event_system.h"
-// #include "sgp_ble_agent.h"
+#include "sgp_ble_agent.h"
 // #include "comm.h"
 
 #define SYSTIME_INTERVAL 10 //ms
@@ -247,13 +247,13 @@ void ble_on_cssc_evt(ble_cssc_t *p_hrs, ble_cssc_evt_arg_t *p_evt)
     switch (p_evt->evt_type)
     {
     case BLE_CSSC_EVT_NOTIFICATION_ENABLED:
-        // SgpBleAgent_ChangeConnStatus(true);
+        SgpBleAgent_ChangeConnStatus(true);
         break;
     case BLE_CSSC_EVT_NOTIFICATION_DISABLED:
-        // SgpBleAgent_ChangeConnStatus(false);
+        SgpBleAgent_ChangeConnStatus(false);
         break;
     case BLE_CSSC_EVT_WRITE:
-        // SgpBleAgent_Receive(p_evt->data, p_evt->length);
+        SgpBleAgent_Receive(p_evt->data, p_evt->length);
         break;
     case BLE_CSSC_EVT_NOTIFY_DONE:
         break;
@@ -401,7 +401,7 @@ static void ble_evt_handler(ble_evt_t const *p_ble_evt, void *p_context)
         NRF_LOG_INFO("Disconnected, reason %d.",
                      p_ble_evt->evt.gap_evt.params.disconnected.reason);
         m_conn_handle = BLE_CONN_HANDLE_INVALID;
-        // SgpBleAgent_ChangeConnStatus(false);
+        SgpBleAgent_ChangeConnStatus(false);
         break;
 
     case BLE_GAP_EVT_PHY_UPDATE_REQUEST:
@@ -615,6 +615,8 @@ int main(void)
     application_timers_start();
     advertising_start(erase_bonds);
 
+
+    SgpBleAgent_Init();
     // Enter main loop.
     for (;;)
     {
@@ -625,7 +627,7 @@ int main(void)
             // NRF_LOG_INFO("%llds", GetSysTime() / 1000);
         }
 
-
+        SgpBleAgent_Process();
         idle_state_handle();
 
 
