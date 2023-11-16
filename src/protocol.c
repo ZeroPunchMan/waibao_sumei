@@ -2,6 +2,7 @@
 #include "cl_event_system.h"
 #include "protocol.h"
 #include "systime.h"
+#include "cl_log.h"
 
 typedef enum
 {
@@ -77,7 +78,7 @@ void ProtocolRecvByte(uint8_t b)
     case PS_Type:
         context.recvPacket.type = b;
         context.receivedLen = 0;
-        if (b > 1)
+        if (context.recvPacket.len > 1)
             context.parseStatus = PS_Data;
         else
             context.parseStatus = PS_Verify;
@@ -93,7 +94,7 @@ void ProtocolRecvByte(uint8_t b)
     case PS_Verify:
         if (b == CalcVerify(&context.recvPacket))
         { // todo raise event
-            CL_EventSysRaise(CL_Event_RecvMsg, 0, &context.recvPacket);
+            CL_EventSysRaise(CL_Event_RecvPack, 0, &context.recvPacket);
         }
 
         context.parseStatus = PS_Head;
@@ -122,7 +123,7 @@ void ProtocolSendPack(uint8_t len, uint8_t type, const uint8_t *data)
         }
         sendFunc(data, len - 1);
     }
-    
+
     sendFunc(&sum, 1);
 }
 

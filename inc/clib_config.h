@@ -11,7 +11,7 @@ extern "C" {
 //-------------event type------------------
 typedef enum
 {
-    CL_Event_RecvMsg = 0,
+    CL_Event_RecvPack = 0,
     CL_EventMax,
 } CL_Event_t;
 

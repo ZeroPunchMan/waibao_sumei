@@ -23,7 +23,8 @@
                 "D:/sdk/nrf5_sdk_17.1.0_ddde560/components/libraries/atomic",
                 "D:/sdk/nrf5_sdk_17.1.0_ddde560/components/libraries/fds",
                 "D:/sdk/nrf5_sdk_17.1.0_ddde560/components/ble/ble_services/ble_hts",
-                "${workspaceFolder}/inc"
+                "${workspaceFolder}/inc",
+                "${workspaceFolder}/clib/inc"
             ],
             "defines": [
                 "_DEBUG",

@@ -33,12 +33,12 @@
 #include "ble_cssc.h"
 #include "cl_event_system.h"
 #include "sgp_ble_agent.h"
-// #include "comm.h"
+#include "comm.h"
 
 #define SYSTIME_INTERVAL 10 //ms
 #define TIMER_INTERVAL APP_TIMER_TICKS(SYSTIME_INTERVAL)
 
-#define DEVICE_NAME "YCZL_WATCH"                /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME "WTFFFFF"                /**< Name of device. Will be included in the advertising data. */
 #define MANUFACTURER_NAME "NordicSemiconductor" /**< Manufacturer. Will be passed to Device Information Service. */
 #define APP_ADV_INTERVAL 300                    /**< The advertising interval (in units of 0.625 ms. This value corresponds to 187.5 ms). */
 
@@ -64,8 +64,8 @@
 
 #define SENSOR_CONTACT_DETECTED_INTERVAL APP_TIMER_TICKS(5000) /**< Sensor Contact Detected toggle interval (ticks). */
 
-#define MIN_CONN_INTERVAL MSEC_TO_UNITS(400, UNIT_1_25_MS) /**< Minimum acceptable connection interval (0.4 seconds). */
-#define MAX_CONN_INTERVAL MSEC_TO_UNITS(650, UNIT_1_25_MS) /**< Maximum acceptable connection interval (0.65 second). */
+#define MIN_CONN_INTERVAL MSEC_TO_UNITS(50, UNIT_1_25_MS) /**< Minimum acceptable connection interval (0.4 seconds). */
+#define MAX_CONN_INTERVAL MSEC_TO_UNITS(200, UNIT_1_25_MS) /**< Maximum acceptable connection interval (0.65 second). */
 #define SLAVE_LATENCY 0                                    /**< Slave latency. */
 #define CONN_SUP_TIMEOUT MSEC_TO_UNITS(4000, UNIT_10_MS)   /**< Connection supervisory timeout (4 seconds). */
 
@@ -616,7 +616,7 @@ int main(void)
     advertising_start(erase_bonds);
 
 
-    SgpBleAgent_Init();
+    Comm_Init();
     // Enter main loop.
     for (;;)
     {
@@ -627,7 +627,7 @@ int main(void)
             // NRF_LOG_INFO("%llds", GetSysTime() / 1000);
         }
 
-        SgpBleAgent_Process();
+        Comm_Process();
         idle_state_handle();
 
         if (adv_idle)
