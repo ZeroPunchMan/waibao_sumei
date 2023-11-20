@@ -1,10 +1,10 @@
-#include "pwm.h"
+#include "lpwm.h"
 #include "nrf_drv_pwm.h"
 #include "nrf_drv_clock.h"
-static uint8_t m_used = 0;
+
+//--------------------pwm------------------------------
 static nrf_drv_pwm_t m_pwm0 = NRF_DRV_PWM_INSTANCE(0);
-#define USED_PWM(idx) (1UL << idx)
-void Pwm_Init(void)
+void MosPwmInit(void)
 {
     nrf_drv_pwm_config_t const config0 =
         {
@@ -22,7 +22,6 @@ void Pwm_Init(void)
             .load_mode = NRF_PWM_LOAD_INDIVIDUAL,
             .step_mode = NRF_PWM_STEP_AUTO};
     APP_ERROR_CHECK(nrf_drv_pwm_init(&m_pwm0, &config0, NULL));
-    m_used |= USED_PWM(0);
 
     // This array cannot be allocated on stack (hence "static") and it must
     // be in RAM (hence no "const", though its content is not changed).
@@ -42,6 +41,34 @@ void Pwm_Init(void)
     (void)nrf_drv_pwm_simple_playback(&m_pwm0, &seq, 1, NRF_DRV_PWM_FLAG_LOOP);
 }
 
-void Pwm_SetOutput(uint8_t duty)
+//------------------tim + gpiote---------------------
+void LedPwmInit(void)
 {
+}
+
+void Pwm_Init(void)
+{
+    MosPwmInit();
+    LedPwmInit();
+}
+
+void Pwm_SetOutput(PwmChannel_t chan, uint8_t duty)
+{
+    switch (chan)
+    {
+    case PwmChan_Mos0:
+        break;
+    case PwmChan_Mos1:
+        break;
+    case PwmChan_Mos2:
+        break;
+    case PwmChan_Mos3:
+        break;
+    case PwmChan_Led0:
+        break;
+    case PwmChan_Led1:
+        break;
+    case PwmChan_Led2:
+        break;
+    }
 }

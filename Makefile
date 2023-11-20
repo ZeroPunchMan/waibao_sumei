@@ -83,8 +83,8 @@ SRC_FILES += \
   $(PROJ_DIR)/src/sgp_ble_agent.c \
   $(PROJ_DIR)/src/protocol.c \
   $(PROJ_DIR)/src/comm.c \
-  $(PROJ_DIR)/src/pwm.c \
-  $(PROJ_DIR)/src/adc.c \
+  $(PROJ_DIR)/src/lpwm.c \
+  $(PROJ_DIR)/src/ladc.c \
   $(PROJ_DIR)/clib/src/cl_event_system.c \
   $(PROJ_DIR)/clib/src/cl_pool.c \
   $(PROJ_DIR)/clib/src/cl_list.c \

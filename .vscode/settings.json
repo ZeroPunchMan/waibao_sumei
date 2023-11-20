@@ -30,6 +30,7 @@
         "xtr1common": "c",
         "gpio.h": "c",
         "nrf_drv_clock.h": "c",
-        "nrf_drv_pwm.h": "c"
+        "nrf_drv_pwm.h": "c",
+        "lpwm.h": "c"
     }
 }
