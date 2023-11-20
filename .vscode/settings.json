@@ -11,6 +11,7 @@
         "clib/testcase": true,
         "clib/.gitignore": true,
         "clib/Makefile": true,
+        "test-tool": true,
     },
     "files.associations": {
         "nrf_log_default_backends.h": "c",
@@ -23,6 +24,12 @@
         "nrf_log_ctrl.h": "c",
         "sgp_ble_agent.h": "c",
         "protocol.h": "c",
-        "cl_log.h": "c"
+        "cl_log.h": "c",
+        "app_pwm.h": "c",
+        "type_traits": "c",
+        "xtr1common": "c",
+        "gpio.h": "c",
+        "nrf_drv_clock.h": "c",
+        "nrf_drv_pwm.h": "c"
     }
 }

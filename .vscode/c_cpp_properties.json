@@ -24,7 +24,11 @@
                 "D:/sdk/nrf5_sdk_17.1.0_ddde560/components/libraries/fds",
                 "D:/sdk/nrf5_sdk_17.1.0_ddde560/components/ble/ble_services/ble_hts",
                 "${workspaceFolder}/inc",
-                "${workspaceFolder}/clib/inc"
+                "${workspaceFolder}/clib/inc",
+                "D:/sdk/nrf5_sdk_17.1.0_ddde560/integration/nrfx/legacy",
+                "D:/sdk/nrf5_sdk_17.1.0_ddde560/modules/nrfx/drivers/include",
+                "D:/sdk/nrf5_sdk_17.1.0_ddde560/modules/nrfx",
+                "D:/sdk/nrf5_sdk_17.1.0_ddde560/integration/nrfx"
             ],
             "defines": [
                 "_DEBUG",

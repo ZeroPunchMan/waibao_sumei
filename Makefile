@@ -83,6 +83,7 @@ SRC_FILES += \
   $(PROJ_DIR)/src/sgp_ble_agent.c \
   $(PROJ_DIR)/src/protocol.c \
   $(PROJ_DIR)/src/comm.c \
+  $(PROJ_DIR)/src/pwm.c \
   $(PROJ_DIR)/clib/src/cl_event_system.c \
   $(PROJ_DIR)/clib/src/cl_pool.c \
   $(PROJ_DIR)/clib/src/cl_list.c \
@@ -123,6 +124,7 @@ SRC_FILES += \
   $(SDK_ROOT)/components/libraries/crypto/backend/oberon/oberon_backend_eddsa.c \
   $(SDK_ROOT)/components/libraries/crypto/backend/oberon/oberon_backend_hash.c \
   $(SDK_ROOT)/components/libraries/crypto/backend/oberon/oberon_backend_hmac.c \
+  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_pwm.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \
@@ -246,6 +248,9 @@ INC_FOLDERS += \
   $(SDK_ROOT)/components/libraries/crypto/backend/cifra \
   $(SDK_ROOT)/components/libraries/stack_guard \
   $(SDK_ROOT)/components/libraries/log/src \
+  $(SDK_ROOT)/modules/nrfx/hal \
+  $(SDK_ROOT)/integration/nrfx/legacy \
+  $(SDK_ROOT)/modules/nrfx/drivers/include \
 
 # Libraries common to all targets
 LIB_FILES += \
