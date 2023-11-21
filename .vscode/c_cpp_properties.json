@@ -39,7 +39,8 @@
                 "uint16_t=unsigned short",
                 "int16_t=short",
                 "uint8_t=unsigned char",
-                "int8_t=char"
+                "int8_t=char",
+                "__STATIC_INLINE=static inline"
             ],
             "windowsSdkVersion": "10.0.22000.0",
             "compilerPath": "cl.exe",

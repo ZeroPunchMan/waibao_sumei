@@ -34,11 +34,12 @@
 #include "cl_event_system.h"
 #include "sgp_ble_agent.h"
 #include "comm.h"
+#include "ladc.h"
 
-#define SYSTIME_INTERVAL 10 //ms
+#define SYSTIME_INTERVAL 10 // ms
 #define TIMER_INTERVAL APP_TIMER_TICKS(SYSTIME_INTERVAL)
 
-#define DEVICE_NAME "WTFFFFF"                /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME "WTFFFFF"                   /**< Name of device. Will be included in the advertising data. */
 #define MANUFACTURER_NAME "NordicSemiconductor" /**< Manufacturer. Will be passed to Device Information Service. */
 #define APP_ADV_INTERVAL 300                    /**< The advertising interval (in units of 0.625 ms. This value corresponds to 187.5 ms). */
 
@@ -64,7 +65,7 @@
 
 #define SENSOR_CONTACT_DETECTED_INTERVAL APP_TIMER_TICKS(5000) /**< Sensor Contact Detected toggle interval (ticks). */
 
-#define MIN_CONN_INTERVAL MSEC_TO_UNITS(50, UNIT_1_25_MS) /**< Minimum acceptable connection interval (0.4 seconds). */
+#define MIN_CONN_INTERVAL MSEC_TO_UNITS(50, UNIT_1_25_MS)  /**< Minimum acceptable connection interval (0.4 seconds). */
 #define MAX_CONN_INTERVAL MSEC_TO_UNITS(200, UNIT_1_25_MS) /**< Maximum acceptable connection interval (0.65 second). */
 #define SLAVE_LATENCY 0                                    /**< Slave latency. */
 #define CONN_SUP_TIMEOUT MSEC_TO_UNITS(4000, UNIT_10_MS)   /**< Connection supervisory timeout (4 seconds). */
@@ -270,13 +271,11 @@ static void services_init(void)
 {
     ret_code_t err_code;
 
-
     ble_cssc_init_t cssc_init;
     cssc_init.evt_handler = ble_on_cssc_evt;
     err_code = ble_cssc_init(&m_cssc, &cssc_init);
     APP_ERROR_CHECK(err_code);
 }
-
 
 /**@brief Function for starting application timers.
  */
@@ -615,7 +614,7 @@ int main(void)
     application_timers_start();
     advertising_start(erase_bonds);
 
-
+    Adc_Init();
     Comm_Init();
     // Enter main loop.
     for (;;)
@@ -625,6 +624,11 @@ int main(void)
         {
             lastTime = GetSysTime();
             // NRF_LOG_INFO("%llds", GetSysTime() / 1000);
+            NRF_LOG_INFO("adc: %d, %d, %d, %d",
+                         GetAdcResult(AdcChan_Current),
+                         GetAdcResult(AdcChan_ExtVol),
+                         GetAdcResult(AdcChan_Battery0),
+                         GetAdcResult(AdcChan_Battery1));
         }
 
         Comm_Process();

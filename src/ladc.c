@@ -4,8 +4,15 @@
 #include "nrf_log.h"
 #include "nrf_drv_ppi.h"
 #include "nrf_drv_timer.h"
+#include "ladc.h"
 
-//##########################ADC driver###########################################
+static nrf_saadc_value_t adcResult[4];
+int16_t GetAdcResult(AdcChannel_t chan)
+{
+    return adcResult[chan];
+}
+
+// ##########################ADC driver###########################################
 #define ADC_BUFF_SIZE (4)
 static const nrf_drv_timer_t m_timer = NRF_DRV_TIMER_INSTANCE(1);
 static nrf_saadc_value_t m_buffer_pool[2][ADC_BUFF_SIZE];
@@ -20,6 +27,10 @@ void saadc_callback(nrf_drv_saadc_evt_t const *p_event)
         err_code = nrf_drv_saadc_buffer_convert(p_event->data.done.p_buffer, ADC_BUFF_SIZE);
         APP_ERROR_CHECK(err_code);
 
+        adcResult[AdcChan_Current] = p_event->data.done.p_buffer[0];
+        adcResult[AdcChan_ExtVol] = p_event->data.done.p_buffer[1];
+        adcResult[AdcChan_Battery0] = p_event->data.done.p_buffer[2];
+        adcResult[AdcChan_Battery1] = p_event->data.done.p_buffer[3];
         // p_event->data.done.p_buffer[3];
     }
 }
@@ -31,22 +42,22 @@ void saadc_init(void)
     err_code = nrf_drv_saadc_init(NULL, saadc_callback);
     APP_ERROR_CHECK(err_code);
 
-    //充电电流
+    // 充电电流
     nrf_saadc_channel_config_t channel_config = NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN2);
     err_code = nrf_drv_saadc_channel_init(0, &channel_config);
     APP_ERROR_CHECK(err_code);
 
-    //外部电压
+    // 外部电压
     nrf_saadc_channel_config_t battery_config = NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN3);
     err_code = nrf_drv_saadc_channel_init(1, &battery_config);
     APP_ERROR_CHECK(err_code);
 
-    //电池电压
+    // 电池电压
     nrf_saadc_channel_config_t ntc_config = NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN5);
     err_code = nrf_drv_saadc_channel_init(2, &ntc_config);
     APP_ERROR_CHECK(err_code);
 
-    //电池电压2
+    // 电池电压2
     nrf_saadc_channel_config_t breath_config = NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN6);
     err_code = nrf_drv_saadc_channel_init(3, &breath_config);
     APP_ERROR_CHECK(err_code);
