@@ -1,6 +1,9 @@
 #include "lpwm.h"
 #include "nrf_drv_pwm.h"
 #include "nrf_drv_clock.h"
+#include "nrf_drv_timer.h"
+#include "cl_log.h"
+#include "breath_rgb.h"
 
 //--------------------pwm------------------------------
 static nrf_drv_pwm_t m_pwm0 = NRF_DRV_PWM_INSTANCE(0);
@@ -38,14 +41,34 @@ void MosPwmInit(void)
     (void)nrf_drv_pwm_simple_playback(&m_pwm0, &seq, 1, NRF_DRV_PWM_FLAG_LOOP);
 
     Pwm_SetOutput(PwmChan_Mos0, 0);
-    Pwm_SetOutput(PwmChan_Mos1, 0);
-    Pwm_SetOutput(PwmChan_Mos2, 0);
-    Pwm_SetOutput(PwmChan_Mos3, 0);
+    Pwm_SetOutput(PwmChan_Mos1, 1);
+    Pwm_SetOutput(PwmChan_Mos2, 99);
+    Pwm_SetOutput(PwmChan_Mos3, 100);
 }
 
-//------------------tim + gpiote---------------------
+//------------------timer---------------------
+void timer_led_event_handler(nrf_timer_event_t event_type, void* p_context)
+{
+    BreathRgb_Update();
+}
+
+const nrf_drv_timer_t TIMER_LED = NRF_DRV_TIMER_INSTANCE(2);
 void LedPwmInit(void)
 {
+    uint32_t time_ticks;
+    uint32_t err_code = NRF_SUCCESS;
+
+    //Configure TIMER_LED for generating simple light effect - leds on board will invert his state one after the other.
+    nrf_drv_timer_config_t timer_cfg = NRF_DRV_TIMER_DEFAULT_CONFIG;
+    err_code = nrf_drv_timer_init(&TIMER_LED, &timer_cfg, timer_led_event_handler);
+    APP_ERROR_CHECK(err_code);
+
+    time_ticks = nrf_drv_timer_us_to_ticks(&TIMER_LED, 100);
+    CL_LOG("ticks: %d", time_ticks);
+    nrf_drv_timer_extended_compare(
+         &TIMER_LED, NRF_TIMER_CC_CHANNEL0, time_ticks, NRF_TIMER_SHORT_COMPARE0_CLEAR_MASK, true);
+
+    nrf_drv_timer_enable(&TIMER_LED);
 }
 
 void Pwm_Init(void)

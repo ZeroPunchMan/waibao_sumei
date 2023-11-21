@@ -28,7 +28,9 @@
                 "D:/sdk/nrf5_sdk_17.1.0_ddde560/integration/nrfx/legacy",
                 "D:/sdk/nrf5_sdk_17.1.0_ddde560/modules/nrfx/drivers/include",
                 "D:/sdk/nrf5_sdk_17.1.0_ddde560/modules/nrfx",
-                "D:/sdk/nrf5_sdk_17.1.0_ddde560/integration/nrfx"
+                "D:/sdk/nrf5_sdk_17.1.0_ddde560/integration/nrfx",
+                "D:/sdk/nrf5_sdk_17.1.0_ddde560/components/libraries/pwm",
+                "D:/sdk/nrf5_sdk_17.1.0_ddde560/modules/nrfx/hal"
             ],
             "defines": [
                 "_DEBUG",
@@ -40,7 +42,8 @@
                 "int16_t=short",
                 "uint8_t=unsigned char",
                 "int8_t=char",
-                "__STATIC_INLINE=static inline"
+                "__STATIC_INLINE=static inline",
+                "APP_PWM"
             ],
             "windowsSdkVersion": "10.0.22000.0",
             "compilerPath": "cl.exe",

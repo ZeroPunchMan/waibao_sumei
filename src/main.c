@@ -36,6 +36,7 @@
 #include "comm.h"
 #include "ladc.h"
 #include "lpwm.h"
+#include "breath_rgb.h"
 
 #define SYSTIME_INTERVAL 10 // ms
 #define TIMER_INTERVAL APP_TIMER_TICKS(SYSTIME_INTERVAL)
@@ -615,8 +616,9 @@ int main(void)
     application_timers_start();
     advertising_start(erase_bonds);
 
-    Adc_Init();
+    BreathRgb_Init();
     Pwm_Init();
+    Adc_Init();
     Comm_Init();
     // Enter main loop.
     for (;;)
@@ -643,3 +645,12 @@ int main(void)
         }
     }
 }
+
+// adc: P0.5-外部电压; P0.4-充电电流; P0.29-电池电压; P0.30-电池电压
+// 	P0.4--AIN2
+// 	P0.5--AIN3
+// 	P0.29--AIN5
+// 	P0.30--AIN6
+// gpio: P0.9 P0.10-充电指示灯; P0.14充电检测灯; P0.11-输出控制
+// pwm: P0.15 P0.16 P0.17 P0.19-电机;
+// 	P0.27 P0.26 P0.25-呼吸灯;
