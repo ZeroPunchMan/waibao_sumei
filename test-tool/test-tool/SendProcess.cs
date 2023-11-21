@@ -28,5 +28,54 @@ namespace UART_demo
 
             SendPacket(packet);
         }
+
+        private void SendStartReq()
+        {
+            WbPacket packet = new WbPacket();
+            packet.dir = 1;
+            packet.len = 1;
+            packet.type = (byte)ProtocolHelper.FunctionCode.Start;
+
+            SendPacket(packet);
+        }
+        private void SendPauseReq()
+        {
+            WbPacket packet = new WbPacket();
+            packet.dir = 1;
+            packet.len = 1;
+            packet.type = (byte)ProtocolHelper.FunctionCode.Pause;
+
+            SendPacket(packet);
+        }
+
+        private void SendStopReq()
+        {
+            WbPacket packet = new WbPacket();
+            packet.dir = 1;
+            packet.len = 1;
+            packet.type = (byte)ProtocolHelper.FunctionCode.Stop;
+
+            SendPacket(packet);
+        }
+
+        private void SendTestMode1()
+        { //todo
+            WbPacket packet = new WbPacket();
+            packet.dir = 1;
+            packet.len = 1;
+            packet.type = (byte)ProtocolHelper.FunctionCode.ReadVersion;
+
+            SendPacket(packet);
+        }
+
+        private void SendTestMode2()
+        { //todo
+            WbPacket packet = new WbPacket();
+            packet.dir = 1;
+            packet.len = 1;
+            packet.type = (byte)ProtocolHelper.FunctionCode.ReadVersion;
+
+            SendPacket(packet);
+        }
     }
 }

@@ -26,6 +26,21 @@ namespace UART_demo
         {
             switch (packet.type)
             {
+                case (byte)ProtocolHelper.FunctionCode.Start:
+                    OnRecvStart(packet);
+                    break;
+                case (byte)ProtocolHelper.FunctionCode.Pause:
+                    OnRecvPause(packet);
+                    break;
+                case (byte)ProtocolHelper.FunctionCode.Stop:
+                    OnRecvStop(packet);
+                    break;
+                case (byte)ProtocolHelper.FunctionCode.Motors:
+                    OnRecvMotors(packet);
+                    break;
+                case (byte)ProtocolHelper.FunctionCode.Battery:
+                    OnRecvBattery(packet);
+                    break;
                 case (byte)ProtocolHelper.FunctionCode.ReadVersion:
                     OnRecvVersion(packet);
                     break;
@@ -33,7 +48,63 @@ namespace UART_demo
             //string s = string.Format("len: 0x{0:x}, id: 0x{1:x}{2}x}}, cmd: 0x{3:x}, cmdsta: 0x{4:x}", packet.length, packet.devId[0], packet.devId[1], packet.cmdType, packet.cmdStatus);
         }
 
+        void OnRecvStart(WbPacket packet)
+        {
+            if (packet.len != 1)
+            {
+                DebugLog("start 长度错误");
+                return;
+            }
 
+            DebugLog("start ok");
+        }
+
+        void OnRecvPause(WbPacket packet)
+        {
+            if (packet.len != 1)
+            {
+                DebugLog("pause 长度错误");
+                return;
+            }
+
+            DebugLog("pause ok");
+        }
+
+        void OnRecvStop(WbPacket packet)
+        {
+            if (packet.len != 1)
+            {
+                DebugLog("stop 长度错误");
+                return;
+            }
+
+            DebugLog("stop ok");
+        }
+
+        void OnRecvMotors(WbPacket packet)
+        {
+            //todo
+            //if (packet.len != 3)
+            //{
+            //    DebugLog("motors长度错误");
+            //    return;
+            //}
+
+            //string s = string.Format("ver: {0}.{1}", packet.data[0], packet.data[1]);
+            //DebugLog(s);
+        }
+
+        void OnRecvBattery(WbPacket packet)
+        {
+            if (packet.len != 2)
+            {
+                DebugLog("battery长度错误");
+                return;
+            }
+
+            string s = string.Format("battery: {0}", packet.data[0]);
+            DebugLog(s);
+        }
 
         void OnRecvVersion(WbPacket packet)
         {

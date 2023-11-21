@@ -48,6 +48,11 @@
             this.button7 = new System.Windows.Forms.Button();
             this.checkBoxPrintSend = new System.Windows.Forms.CheckBox();
             this.buttonGetVersion = new System.Windows.Forms.Button();
+            this.buttonStart = new System.Windows.Forms.Button();
+            this.buttonPause = new System.Windows.Forms.Button();
+            this.buttonStop = new System.Windows.Forms.Button();
+            this.buttonTestMode1 = new System.Windows.Forms.Button();
+            this.buttonTestMode2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // textBoxReceive
@@ -251,11 +256,66 @@
             this.buttonGetVersion.UseVisualStyleBackColor = true;
             this.buttonGetVersion.Click += new System.EventHandler(this.buttonGetVersion_Click);
             // 
+            // buttonStart
+            // 
+            this.buttonStart.Location = new System.Drawing.Point(310, 518);
+            this.buttonStart.Name = "buttonStart";
+            this.buttonStart.Size = new System.Drawing.Size(55, 23);
+            this.buttonStart.TabIndex = 70;
+            this.buttonStart.Text = "开始";
+            this.buttonStart.UseVisualStyleBackColor = true;
+            this.buttonStart.Click += new System.EventHandler(this.buttonStart_Click);
+            // 
+            // buttonPause
+            // 
+            this.buttonPause.Location = new System.Drawing.Point(384, 518);
+            this.buttonPause.Name = "buttonPause";
+            this.buttonPause.Size = new System.Drawing.Size(55, 23);
+            this.buttonPause.TabIndex = 71;
+            this.buttonPause.Text = "暂停";
+            this.buttonPause.UseVisualStyleBackColor = true;
+            this.buttonPause.Click += new System.EventHandler(this.buttonPause_Click);
+            // 
+            // buttonStop
+            // 
+            this.buttonStop.Location = new System.Drawing.Point(310, 547);
+            this.buttonStop.Name = "buttonStop";
+            this.buttonStop.Size = new System.Drawing.Size(55, 23);
+            this.buttonStop.TabIndex = 72;
+            this.buttonStop.Text = "停止";
+            this.buttonStop.UseVisualStyleBackColor = true;
+            this.buttonStop.Click += new System.EventHandler(this.buttonStop_Click);
+            // 
+            // buttonTestMode1
+            // 
+            this.buttonTestMode1.Location = new System.Drawing.Point(537, 518);
+            this.buttonTestMode1.Name = "buttonTestMode1";
+            this.buttonTestMode1.Size = new System.Drawing.Size(72, 23);
+            this.buttonTestMode1.TabIndex = 73;
+            this.buttonTestMode1.Text = "测试模式1";
+            this.buttonTestMode1.UseVisualStyleBackColor = true;
+            this.buttonTestMode1.Click += new System.EventHandler(this.buttonTestMode1_Click);
+            // 
+            // buttonTestMode2
+            // 
+            this.buttonTestMode2.Location = new System.Drawing.Point(627, 518);
+            this.buttonTestMode2.Name = "buttonTestMode2";
+            this.buttonTestMode2.Size = new System.Drawing.Size(71, 23);
+            this.buttonTestMode2.TabIndex = 74;
+            this.buttonTestMode2.Text = "测试模式2";
+            this.buttonTestMode2.UseVisualStyleBackColor = true;
+            this.buttonTestMode2.Click += new System.EventHandler(this.buttonTestMode2_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(832, 602);
+            this.Controls.Add(this.buttonTestMode2);
+            this.Controls.Add(this.buttonTestMode1);
+            this.Controls.Add(this.buttonStop);
+            this.Controls.Add(this.buttonPause);
+            this.Controls.Add(this.buttonStart);
             this.Controls.Add(this.checkBoxPrintSend);
             this.Controls.Add(this.buttonGetVersion);
             this.Controls.Add(this.button7);
@@ -279,7 +339,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "Form1";
-            this.Text = "H6";
+            this.Text = "sm";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -308,6 +368,11 @@
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.CheckBox checkBoxPrintSend;
         private System.Windows.Forms.Button buttonGetVersion;
+        private System.Windows.Forms.Button buttonStart;
+        private System.Windows.Forms.Button buttonPause;
+        private System.Windows.Forms.Button buttonStop;
+        private System.Windows.Forms.Button buttonTestMode1;
+        private System.Windows.Forms.Button buttonTestMode2;
     }
 }
 

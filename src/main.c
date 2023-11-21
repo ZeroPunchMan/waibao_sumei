@@ -628,11 +628,11 @@ int main(void)
         {
             lastTime = GetSysTime();
             // NRF_LOG_INFO("%llds", GetSysTime() / 1000);
-            NRF_LOG_INFO("adc: %d, %d, %d, %d",
-                         GetAdcResult(AdcChan_Current),
-                         GetAdcResult(AdcChan_ExtVol),
-                         GetAdcResult(AdcChan_Battery0),
-                         GetAdcResult(AdcChan_Battery1));
+            // NRF_LOG_INFO("adc: %d, %d, %d, %d",
+            //              GetAdcResult(AdcChan_Current),
+            //              GetAdcResult(AdcChan_ExtVol),
+            //              GetAdcResult(AdcChan_Battery0),
+            //              GetAdcResult(AdcChan_Battery1));
         }
 
         Comm_Process();
@@ -654,3 +654,9 @@ int main(void)
 // gpio: P0.9 P0.10-充电指示灯; P0.14充电检测灯; P0.11-输出控制
 // pwm: P0.15 P0.16 P0.17 P0.19-电机;
 // 	P0.27 P0.26 P0.25-呼吸灯;
+
+
+// 1.开始 暂停 紧急停止，三个命令分别执行什么操作？
+// 2.3个呼吸灯的效果具体是什么？
+// 3.电池电量有两路ADC，具体用哪一个？
+// 4.电机控制有两个参数，强度和频率，具体需要什么效果？对应的IO口分别是哪个？

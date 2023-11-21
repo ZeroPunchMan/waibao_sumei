@@ -440,6 +440,30 @@ namespace UART_demo
             SendVersionReq();
         }
 
+        private void buttonStart_Click(object sender, EventArgs e)
+        {
+            SendStartReq();
+        }
+
+        private void buttonPause_Click(object sender, EventArgs e)
+        {
+            SendPauseReq();
+        }
+
+        private void buttonStop_Click(object sender, EventArgs e)
+        {
+            SendStopReq();
+        }
+
+        private void buttonTestMode1_Click(object sender, EventArgs e)
+        {
+            SendTestMode1();
+        }
+
+        private void buttonTestMode2_Click(object sender, EventArgs e)
+        {
+            SendTestMode2();
+        }
     }
 
 

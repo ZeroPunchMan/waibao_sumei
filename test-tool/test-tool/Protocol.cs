@@ -11,6 +11,11 @@ namespace SogProtocol
 
         public enum FunctionCode
         {
+            Start = 0x01,
+            Pause = 0x02,
+            Stop = 0x03,
+            Motors = 0x04,
+            Battery = 0x05,
             ReadVersion = 0x66,
         }
         public static byte CalcVerify(byte type, byte[] data, byte count)
@@ -130,12 +135,18 @@ namespace SogProtocol
                     break;
                 case ParseStatus.Len:
                     packet.len = b;
-                    status = ParseStatus.Type;
-                    Log("cmd");
+                    if (packet.len >= 1)
+                        status = ParseStatus.Type;
+                    else
+                        status = ParseStatus.Head;
                     break;
                 case ParseStatus.Type:
                     packet.type = b;
-                    status = ParseStatus.Data;
+                    if (packet.len > 1)
+                        status = ParseStatus.Data;
+                    else
+                        status = ParseStatus.Verify;
+
                     parseCount = 0;
                     break;
                 case ParseStatus.Data:
@@ -150,7 +161,7 @@ namespace SogProtocol
                     status = ParseStatus.Head;
 
                     byte verify = ProtocolHelper.CalcVerify(packet.type, packet.data, (byte)(packet.len - 1));
-                    if(b == verify)
+                    if (b == verify)
                     {
                         return packet;
                     }
