@@ -35,6 +35,7 @@
 #include "sgp_ble_agent.h"
 #include "comm.h"
 #include "ladc.h"
+#include "lpwm.h"
 
 #define SYSTIME_INTERVAL 10 // ms
 #define TIMER_INTERVAL APP_TIMER_TICKS(SYSTIME_INTERVAL)
@@ -615,6 +616,7 @@ int main(void)
     advertising_start(erase_bonds);
 
     Adc_Init();
+    Pwm_Init();
     Comm_Init();
     // Enter main loop.
     for (;;)
