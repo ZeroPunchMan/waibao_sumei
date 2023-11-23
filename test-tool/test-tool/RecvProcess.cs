@@ -26,11 +26,8 @@ namespace UART_demo
         {
             switch (packet.type)
             {
-                case (byte)ProtocolHelper.FunctionCode.Start:
-                    OnRecvStart(packet);
-                    break;
-                case (byte)ProtocolHelper.FunctionCode.Pause:
-                    OnRecvPause(packet);
+                case (byte)ProtocolHelper.FunctionCode.RunPause:
+                    OnRecvRunPause(packet);
                     break;
                 case (byte)ProtocolHelper.FunctionCode.Stop:
                     OnRecvStop(packet);
@@ -48,27 +45,20 @@ namespace UART_demo
             //string s = string.Format("len: 0x{0:x}, id: 0x{1:x}{2}x}}, cmd: 0x{3:x}, cmdsta: 0x{4:x}", packet.length, packet.devId[0], packet.devId[1], packet.cmdType, packet.cmdStatus);
         }
 
-        void OnRecvStart(WbPacket packet)
+        void OnRecvRunPause(WbPacket packet)
         {
-            if (packet.len != 1)
+            if (packet.len != 2)
             {
-                DebugLog("start 长度错误");
+                DebugLog("run pause 长度错误");
                 return;
             }
 
-            DebugLog("start ok");
+            if (packet.data[0] == 1)
+                DebugLog("运行 ok");
+            else
+                DebugLog("暂停 ok");
         }
 
-        void OnRecvPause(WbPacket packet)
-        {
-            if (packet.len != 1)
-            {
-                DebugLog("pause 长度错误");
-                return;
-            }
-
-            DebugLog("pause ok");
-        }
 
         void OnRecvStop(WbPacket packet)
         {
@@ -96,13 +86,13 @@ namespace UART_demo
 
         void OnRecvBattery(WbPacket packet)
         {
-            if (packet.len != 2)
+            if (packet.len != 3)
             {
                 DebugLog("battery长度错误");
                 return;
             }
 
-            string s = string.Format("battery: {0}", packet.data[0]);
+            string s = string.Format("电量: {0}, 充电: {1}", packet.data[0], packet.data[1]);
             DebugLog(s);
         }
 

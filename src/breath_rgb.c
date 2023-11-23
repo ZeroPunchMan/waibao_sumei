@@ -9,6 +9,7 @@ static volatile uint8_t rgbLevel[3] = {0, 0, 0};
 static volatile uint8_t rgbDir[3] = {1, 1, 1};
 static volatile bool initialized = false;
 static volatile uint8_t rgbEnable = false;
+static volatile uint8_t rgbBreathIntvl[3] = {30, 30, 30};
 
 void BreathRgb_Init(void)
 {
@@ -47,7 +48,7 @@ void BreathRgb_Update(void)
 
     // 亮度变化,每100ms变化一次
     static uint32_t levelTime = 0;
-    if (SysTimeSpan(levelTime) >= 30) // todo
+    if (SysTimeSpan(levelTime) >= rgbBreathIntvl[0]) // todo 多个灯单独处理？
     {
         levelTime = GetSysTime();
 
@@ -79,7 +80,7 @@ void BreathRgb_Update(void)
         nrf_gpio_pin_clear(NRF_GPIO_PIN_MAP(0, 25));
     else
         nrf_gpio_pin_set(NRF_GPIO_PIN_MAP(0, 25));
-        
+
     // G
     if (rgbCount[1] < rgbLevel[1])
         nrf_gpio_pin_clear(NRF_GPIO_PIN_MAP(0, 26));
@@ -91,4 +92,12 @@ void BreathRgb_Update(void)
         nrf_gpio_pin_clear(NRF_GPIO_PIN_MAP(0, 27));
     else
         nrf_gpio_pin_set(NRF_GPIO_PIN_MAP(0, 27));
+}
+
+static const uint8_t freqIntvlTable[BLF_FreqMax] = {50, 45, 40, 35, 30};
+void BreatRgb_SetFreq(BreathLedFreq_t rFreq, BreathLedFreq_t gFreq, BreathLedFreq_t bFreq)
+{
+    rgbBreathIntvl[0] = freqIntvlTable[rFreq];
+    rgbBreathIntvl[1] = freqIntvlTable[gFreq];
+    rgbBreathIntvl[2] = freqIntvlTable[bFreq];
 }

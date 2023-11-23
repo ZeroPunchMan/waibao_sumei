@@ -33,6 +33,9 @@
         "nrf_drv_pwm.h": "c",
         "lpwm.h": "c",
         "nrf_drv_saadc.h": "c",
-        "systime.h": "c"
+        "systime.h": "c",
+        "sys_output.h": "c",
+        "nrf_gpio.h": "c",
+        "bat_monitor.h": "c"
     }
 }

@@ -37,8 +37,10 @@
 #include "ladc.h"
 #include "lpwm.h"
 #include "breath_rgb.h"
+#include "sys_output.h"
+#include "bat_monitor.h"
 
-#define SYSTIME_INTERVAL 10 // ms
+#define SYSTIME_INTERVAL 2 // ms
 #define TIMER_INTERVAL APP_TIMER_TICKS(SYSTIME_INTERVAL)
 
 #define DEVICE_NAME "WTFFFFF"                   /**< Name of device. Will be included in the advertising data. */
@@ -620,6 +622,8 @@ int main(void)
     Pwm_Init();
     Adc_Init();
     Comm_Init();
+    SysOutput_Init();
+    BatMonitor_Init();
     // Enter main loop.
     for (;;)
     {
@@ -628,14 +632,17 @@ int main(void)
         {
             lastTime = GetSysTime();
             // NRF_LOG_INFO("%llds", GetSysTime() / 1000);
-            // NRF_LOG_INFO("adc: %d, %d, %d, %d",
-            //              GetAdcResult(AdcChan_Current),
-            //              GetAdcResult(AdcChan_ExtVol),
-            //              GetAdcResult(AdcChan_Battery0),
-            //              GetAdcResult(AdcChan_Battery1));
+            NRF_LOG_INFO("adc: %d, %d, %d, %d",
+                         GetAdcResult(AdcChan_Current),
+                         GetAdcResult(AdcChan_ExtVol),
+                         GetAdcResult(AdcChan_Battery0),
+                         GetAdcResult(AdcChan_Battery1));
         }
 
         Comm_Process();
+        SysOutput_Process();
+        BatMonitor_Process();
+
         idle_state_handle();
 
         if (adv_idle)

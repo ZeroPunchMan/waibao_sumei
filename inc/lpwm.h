@@ -4,7 +4,7 @@
 
 typedef enum
 {
-    PwmChan_Mos0,
+    PwmChan_Mos0 = 0,
     PwmChan_Mos1,
     PwmChan_Mos2,
     PwmChan_Mos3,

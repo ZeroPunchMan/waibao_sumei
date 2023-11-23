@@ -41,9 +41,9 @@ void MosPwmInit(void)
     (void)nrf_drv_pwm_simple_playback(&m_pwm0, &seq, 1, NRF_DRV_PWM_FLAG_LOOP);
 
     Pwm_SetOutput(PwmChan_Mos0, 0);
-    Pwm_SetOutput(PwmChan_Mos1, 1);
-    Pwm_SetOutput(PwmChan_Mos2, 99);
-    Pwm_SetOutput(PwmChan_Mos3, 100);
+    Pwm_SetOutput(PwmChan_Mos1, 0);
+    Pwm_SetOutput(PwmChan_Mos2, 0);
+    Pwm_SetOutput(PwmChan_Mos3, 0);
 }
 
 //------------------timer---------------------

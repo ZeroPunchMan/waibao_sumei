@@ -3,11 +3,12 @@
 #include "cl_event_system.h"
 #include "cl_log.h"
 #include "sgp_ble_agent.h"
+#include "sys_output.h"
+#include "bat_monitor.h"
 
 typedef enum
 {
-    PT_Start = 0x01,
-    PT_Pause = 0x02,
+    PT_RunPause = 0x01,
     PT_Stop = 0x03,
     PT_Motors = 0x04,
     PT_Battery = 0x05,
@@ -21,35 +22,38 @@ static void SendVersion(void)
     ProtocolSendPack(3, PT_Version, version);
 }
 
-// static void SendBattery(uint8_t percent)
-// {
-//     ProtocolSendPack(2, PT_Battery, &percent);
-// }
+static void SendBattery(uint8_t percent, bool charge)
+{
+    uint8_t data[2] = {percent, charge ? 1 : 0};
+    ProtocolSendPack(3, PT_Battery, data);
+}
 
 static void OnRecvStart(ProtoPack_t *pack)
 {
-    CL_LOG("recv start");
-    //todo
-    ProtocolSendPack(1, PT_Start, CL_NULL);
-}
-
-static void OnRecvPause(ProtoPack_t *pack)
-{
-    CL_LOG("recv pause");
-    //todo
-    ProtocolSendPack(1, PT_Pause, CL_NULL);
+    CL_LOG("recv runpause: %d", pack->data[0]);
+    SysOutput_RunPause(pack->data[0] == 1);
+    ProtocolSendPack(2, PT_RunPause, pack->data);
 }
 
 static void OnRecvStop(ProtoPack_t *pack)
 {
     CL_LOG("recv stop");
-    //todo
+    SysOutput_Stop();
     ProtocolSendPack(1, PT_Stop, CL_NULL);
 }
 
 static void OnRecvMotors(ProtoPack_t *pack)
 {
-    CL_LOG("recv motors");
+    if (pack->len != 9)
+        return;
+
+    SysOutput_SetChannel(0, pack->data[0], pack->data[1]);
+    SysOutput_SetChannel(1, pack->data[2], pack->data[3]);
+    SysOutput_SetChannel(2, pack->data[4], pack->data[5]);
+    SysOutput_SetChannel(3, pack->data[6], pack->data[7]);
+
+    ProtocolSendPack(9, PT_Motors, pack->data);
+    // CL_LOG("recv motors");
 }
 
 static bool OnRecvAppMsg(void *eventArg)
@@ -60,11 +64,8 @@ static bool OnRecvAppMsg(void *eventArg)
 
     switch (pack->type)
     {
-    case PT_Start:
+    case PT_RunPause:
         OnRecvStart(pack);
-        break;
-    case PT_Pause:
-        OnRecvPause(pack);
         break;
     case PT_Stop:
         OnRecvStop(pack);
@@ -89,6 +90,12 @@ void Comm_Init(void)
 void Comm_Process(void)
 {
     SgpBleAgent_Process();
+
+    static uint32_t lastTime = 0;
+    if (SysTimeSpan(lastTime) >= SYSTIME_SECOND(2))
+    {
+        lastTime = GetSysTime();
+
+        SendBattery(GetBatPercent(), GetBatStatus() == BatSta_Charge);
+    }
 }
-
-
