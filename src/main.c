@@ -632,11 +632,11 @@ int main(void)
         {
             lastTime = GetSysTime();
             // NRF_LOG_INFO("%llds", GetSysTime() / 1000);
-            // NRF_LOG_INFO("adc: %d, %d, %d, %d",
-            //              GetAdcResult(AdcChan_Current),
-            //              GetAdcResult(AdcChan_ExtVol),
-            //              GetAdcResult(AdcChan_Battery0),
-            //              GetAdcResult(AdcChan_Battery1));
+            NRF_LOG_INFO("adc: %d, %d, %d, %d",
+                         GetAdcResult(AdcChan_Current),
+                         GetAdcResult(AdcChan_ExtVol),
+                         GetAdcResult(AdcChan_Battery0),
+                         GetAdcResult(AdcChan_Battery1));
         }
 
         Comm_Process();

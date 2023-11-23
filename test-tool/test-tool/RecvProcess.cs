@@ -86,13 +86,13 @@ namespace UART_demo
 
         void OnRecvBattery(WbPacket packet)
         {
-            if (packet.len != 2)
+            if (packet.len != 3)
             {
                 DebugLog("battery长度错误");
                 return;
             }
 
-            string s = string.Format("battery: {0}", packet.data[0]);
+            string s = string.Format("电量: {0}, 充电: {1}", packet.data[0], packet.data[1]);
             DebugLog(s);
         }
 

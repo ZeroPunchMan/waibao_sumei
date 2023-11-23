@@ -5,7 +5,7 @@
 #include "systime.h"
 #include "sys_output.h"
 
-#define EXT_VOL_THRESH (300)
+#define EXT_VOL_THRESH (VOLTAGE_TO_ADC(0.8f))
 
 static BatStatus_t batStatus = BatSta_Ok;
 static uint8_t batPercent = 100;
