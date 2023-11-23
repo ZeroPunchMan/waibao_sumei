@@ -258,7 +258,7 @@
             // 
             // buttonStart
             // 
-            this.buttonStart.Location = new System.Drawing.Point(310, 518);
+            this.buttonStart.Location = new System.Drawing.Point(328, 518);
             this.buttonStart.Name = "buttonStart";
             this.buttonStart.Size = new System.Drawing.Size(55, 23);
             this.buttonStart.TabIndex = 70;
@@ -268,7 +268,7 @@
             // 
             // buttonPause
             // 
-            this.buttonPause.Location = new System.Drawing.Point(384, 518);
+            this.buttonPause.Location = new System.Drawing.Point(404, 518);
             this.buttonPause.Name = "buttonPause";
             this.buttonPause.Size = new System.Drawing.Size(55, 23);
             this.buttonPause.TabIndex = 71;
@@ -278,7 +278,7 @@
             // 
             // buttonStop
             // 
-            this.buttonStop.Location = new System.Drawing.Point(310, 547);
+            this.buttonStop.Location = new System.Drawing.Point(328, 547);
             this.buttonStop.Name = "buttonStop";
             this.buttonStop.Size = new System.Drawing.Size(55, 23);
             this.buttonStop.TabIndex = 72;

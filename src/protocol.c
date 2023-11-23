@@ -87,7 +87,7 @@ void ProtocolRecvByte(uint8_t b)
 
     case PS_Data:
         context.recvPacket.data[context.receivedLen++] = b;
-        if (context.receivedLen >= context.recvPacket.len)
+        if (context.receivedLen >= context.recvPacket.len - 1)
             context.parseStatus = PS_Verify;
         break;
 

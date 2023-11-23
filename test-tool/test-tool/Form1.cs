@@ -442,12 +442,12 @@ namespace UART_demo
 
         private void buttonStart_Click(object sender, EventArgs e)
         {
-            SendStartReq();
+            SendRunPauseReq(true);
         }
 
         private void buttonPause_Click(object sender, EventArgs e)
         {
-            SendPauseReq();
+            SendRunPauseReq(false);
         }
 
         private void buttonStop_Click(object sender, EventArgs e)

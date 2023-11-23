@@ -29,21 +29,16 @@ namespace UART_demo
             SendPacket(packet);
         }
 
-        private void SendStartReq()
+        private void SendRunPauseReq(bool run)
         {
             WbPacket packet = new WbPacket();
             packet.dir = 1;
-            packet.len = 1;
-            packet.type = (byte)ProtocolHelper.FunctionCode.Start;
-
-            SendPacket(packet);
-        }
-        private void SendPauseReq()
-        {
-            WbPacket packet = new WbPacket();
-            packet.dir = 1;
-            packet.len = 1;
-            packet.type = (byte)ProtocolHelper.FunctionCode.Pause;
+            packet.len = 2;
+            packet.type = (byte)ProtocolHelper.FunctionCode.RunPause;
+            if (run)
+                packet.data[0] = 1;
+            else
+                packet.data[0] = 0;
 
             SendPacket(packet);
         }
@@ -59,21 +54,40 @@ namespace UART_demo
         }
 
         private void SendTestMode1()
-        { //todo
+        {
             WbPacket packet = new WbPacket();
             packet.dir = 1;
-            packet.len = 1;
-            packet.type = (byte)ProtocolHelper.FunctionCode.ReadVersion;
+            packet.len = 9;
+            packet.type = (byte)ProtocolHelper.FunctionCode.Motors;
+
+            for (int i = 0; i < 4; i++)
+            {
+                packet.data[i * 2] = (byte)(i * 10 + 10);
+                packet.data[i * 2 + 1] = (byte)(i + 6);
+            }
 
             SendPacket(packet);
         }
 
         private void SendTestMode2()
-        { //todo
+        {
             WbPacket packet = new WbPacket();
             packet.dir = 1;
-            packet.len = 1;
-            packet.type = (byte)ProtocolHelper.FunctionCode.ReadVersion;
+            packet.len = 9;
+            packet.type = (byte)ProtocolHelper.FunctionCode.Motors;
+
+            packet.data[0] = 0;
+            packet.data[1] = 5;
+
+            packet.data[2] = 33;
+            packet.data[3] = 7;
+
+            packet.data[4] = 67;
+            packet.data[5] = 9;
+
+            packet.data[6] = 100;
+            packet.data[7] = 10;
+
 
             SendPacket(packet);
         }

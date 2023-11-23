@@ -86,6 +86,7 @@ SRC_FILES += \
   $(PROJ_DIR)/src/lpwm.c \
   $(PROJ_DIR)/src/ladc.c \
   $(PROJ_DIR)/src/breath_rgb.c \
+  $(PROJ_DIR)/src/sys_output.c \
   $(PROJ_DIR)/clib/src/cl_event_system.c \
   $(PROJ_DIR)/clib/src/cl_pool.c \
   $(PROJ_DIR)/clib/src/cl_list.c \
