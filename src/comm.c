@@ -4,6 +4,7 @@
 #include "cl_log.h"
 #include "sgp_ble_agent.h"
 #include "sys_output.h"
+#include "bat_monitor.h"
 
 typedef enum
 {
@@ -21,10 +22,11 @@ static void SendVersion(void)
     ProtocolSendPack(3, PT_Version, version);
 }
 
-// static void SendBattery(uint8_t percent)
-// {
-//     ProtocolSendPack(2, PT_Battery, &percent);
-// }
+static void SendBattery(uint8_t percent, bool charge)
+{
+    uint8_t data[2] = {percent, charge ? 1 : 0};
+    ProtocolSendPack(3, PT_Battery, data);
+}
 
 static void OnRecvStart(ProtoPack_t *pack)
 {
@@ -42,9 +44,9 @@ static void OnRecvStop(ProtoPack_t *pack)
 
 static void OnRecvMotors(ProtoPack_t *pack)
 {
-    if(pack->len != 9)
+    if (pack->len != 9)
         return;
-    
+
     SysOutput_SetChannel(0, pack->data[0], pack->data[1]);
     SysOutput_SetChannel(1, pack->data[2], pack->data[3]);
     SysOutput_SetChannel(2, pack->data[4], pack->data[5]);
@@ -88,6 +90,12 @@ void Comm_Init(void)
 void Comm_Process(void)
 {
     SgpBleAgent_Process();
+
+    static uint32_t lastTime = 0;
+    if (SysTimeSpan(lastTime) >= SYSTIME_SECOND(2))
+    {
+        lastTime = GetSysTime();
+
+        SendBattery(GetBatPercent(), GetBatStatus() == BatSta_Charge);
+    }
 }
-
-

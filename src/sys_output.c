@@ -3,6 +3,8 @@
 #include "lpwm.h"
 #include "nrf_gpio.h"
 #include "cl_log.h"
+#include "bat_monitor.h"
+#include "breath_rgb.h"
 
 typedef struct
 {
@@ -33,8 +35,10 @@ void SysOutput_Process(void)
 {
     if (sysRunPause)
     {
+        uint16_t sumOfPwr = 0;
         for (int i = 0; i < CL_ARRAY_LENGTH(chanCtxs); i++)
         {
+            sumOfPwr += chanCtxs[i].power;
             uint32_t interval = freqTable[chanCtxs[i].freq - 6];
             if (SysTimeSpan(chanCtxs[i].lastStepTime) >= interval)
             {
@@ -47,25 +51,37 @@ void SysOutput_Process(void)
                     Pwm_SetOutput((PwmChannel_t)(i + PwmChan_Mos0), 0);
             }
         }
+
+        sumOfPwr /= 80;
+        sumOfPwr = CL_MIN(sumOfPwr, BLF_Freq4);
+        BreatRgb_SetFreq(sumOfPwr, sumOfPwr, sumOfPwr);
+        // todo 呼吸灯
     }
 }
 
 void SysOutput_Stop()
 {
+    SysOutput_RunPause(false);
     nrf_gpio_pin_clear(NRF_GPIO_PIN_MAP(0, 11));
 }
 
 void SysOutput_RunPause(bool run)
 {
-    sysRunPause = run;
     if (!run)
     {
         for (int i = 0; i < CL_ARRAY_LENGTH(chanCtxs); i++)
             Pwm_SetOutput((PwmChannel_t)(i + PwmChan_Mos0), 0);
+
+        BreatRgb_SetFreq(BLF_Freq0, BLF_Freq0, BLF_Freq0);
+        sysRunPause = false;
     }
     else
     {
+        if (GetBatStatus() != BatSta_Ok)
+            return;
+
         nrf_gpio_pin_set(NRF_GPIO_PIN_MAP(0, 11));
+        sysRunPause = true;
     }
 }
 

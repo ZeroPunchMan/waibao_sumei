@@ -93,7 +93,7 @@ void ProtocolRecvByte(uint8_t b)
 
     case PS_Verify:
         if (b == CalcVerify(&context.recvPacket))
-        { // todo raise event
+        { 
             CL_EventSysRaise(CL_Event_RecvPack, 0, &context.recvPacket);
         }
 

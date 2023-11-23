@@ -38,6 +38,7 @@
 #include "lpwm.h"
 #include "breath_rgb.h"
 #include "sys_output.h"
+#include "bat_monitor.h"
 
 #define SYSTIME_INTERVAL 2 // ms
 #define TIMER_INTERVAL APP_TIMER_TICKS(SYSTIME_INTERVAL)
@@ -622,6 +623,7 @@ int main(void)
     Adc_Init();
     Comm_Init();
     SysOutput_Init();
+    BatMonitor_Init();
     // Enter main loop.
     for (;;)
     {
@@ -639,6 +641,8 @@ int main(void)
 
         Comm_Process();
         SysOutput_Process();
+        BatMonitor_Process();
+
         idle_state_handle();
 
         if (adv_idle)
