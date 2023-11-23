@@ -6,23 +6,23 @@
         {
             "label": "build",
             "type": "shell",
-            "command": ".\\toolchain\\make.exe -C .",
+            "command": "..\\toolchain\\make.exe -C .",
             "group": "build",
         },
         {
             "label": "erase",
             "type": "shell",
-            "command": ".\\toolchain\\make.exe -C . erase"
+            "command": "..\\toolchain\\make.exe -C . erase"
         },
         {
             "label": "download",
             "type": "shell",
-            "command": ".\\toolchain\\make.exe -C . flash"
+            "command": "..\\toolchain\\make.exe -C . flash"
         },
         {
             "label": "download softdevice",
             "type": "shell",
-            "command": ".\\toolchain\\make.exe -C . flash_softdevice"
+            "command": "..\\toolchain\\make.exe -C . flash_softdevice"
         },
         {
             "label": "clean",
