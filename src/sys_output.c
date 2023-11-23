@@ -46,7 +46,7 @@ void SysOutput_Process(void)
 
                 chanCtxs[i].work = !chanCtxs[i].work;
                 if (chanCtxs[i].work)
-                    Pwm_SetOutput((PwmChannel_t)(i + PwmChan_Mos0), chanCtxs[i].power);
+                    Pwm_SetOutput((PwmChannel_t)(i + PwmChan_Mos0), chanCtxs[i].power); //todo 用100占空比验证频率
                 else
                     Pwm_SetOutput((PwmChannel_t)(i + PwmChan_Mos0), 0);
             }

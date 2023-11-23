@@ -48,12 +48,12 @@ void saadc_init(void)
     APP_ERROR_CHECK(err_code);
 
     // 外部电压
-    nrf_saadc_channel_config_t battery_config = NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN3);
+    nrf_saadc_channel_config_t battery_config = NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN3); //P0.05 橙色线
     err_code = nrf_drv_saadc_channel_init(1, &battery_config);
     APP_ERROR_CHECK(err_code);
 
     // 电池电压
-    nrf_saadc_channel_config_t ntc_config = NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN5);
+    nrf_saadc_channel_config_t ntc_config = NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN5);//P0.29
     err_code = nrf_drv_saadc_channel_init(2, &ntc_config);
     APP_ERROR_CHECK(err_code);
 
