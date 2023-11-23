@@ -16,10 +16,10 @@ void MosPwmInit(void)
         {
             .output_pins =
                 {
-                    15, // channel 0
-                    16, // channel 1
-                    17, // channel 2
-                    19  // channel 3
+                    19, // channel 0
+                    15, // channel 1
+                    16, // channel 2
+                    17  // channel 3
                 },
             .irq_priority = APP_IRQ_PRIORITY_LOWEST,
             .base_clock = NRF_PWM_CLK_1MHz,
@@ -92,12 +92,6 @@ void Pwm_SetOutput(PwmChannel_t chan, uint8_t duty)
         break;
     case PwmChan_Mos3:
         seq_values->channel_3 = 100 - duty;
-        break;
-    case PwmChan_Led0:
-        break;
-    case PwmChan_Led1:
-        break;
-    case PwmChan_Led2:
         break;
     }
 }

@@ -97,7 +97,10 @@ static void LowProc(void)
                 CL_LOG("low bat, stop output");
             }
         }
-        // todo 需要检测电压上升吗？
+        if(batPercent >= 50)
+        {
+            ToOk();
+        }
     }
 }
 
