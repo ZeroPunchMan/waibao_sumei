@@ -12,7 +12,6 @@ namespace SogProtocol
         public enum FunctionCode
         {
             RunPause = 0x01,
-            Pause = 0x02,
             Stop = 0x03,
             Motors = 0x04,
             Battery = 0x05,

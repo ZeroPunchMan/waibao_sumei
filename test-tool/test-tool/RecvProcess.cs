@@ -53,10 +53,21 @@ namespace UART_demo
                 return;
             }
 
-            if (packet.data[0] == 1)
-                DebugLog("运行 ok");
-            else
-                DebugLog("暂停 ok");
+            switch (packet.data[0])
+            {
+                case 0:
+                    DebugLog("暂停 ok");
+                    break;
+                case 1:
+                    DebugLog("运行 ok");
+                    break;
+                case 2:
+                    DebugLog("运行失败：电量低");
+                    break;
+                case 3:
+                    DebugLog("运行失败：充电中");
+                    break;
+            }
         }
 
 
@@ -92,7 +103,20 @@ namespace UART_demo
                 return;
             }
 
-            string s = string.Format("电量: {0}, 充电: {1}", packet.data[0], packet.data[1]);
+            string sta = "undefined";
+            switch (packet.data[1])
+            {
+                case 1:
+                    sta = "ok";
+                    break;
+                case 2:
+                    sta = "电量低";
+                    break;
+                case 3:
+                    sta = "充电中";
+                    break;
+            }
+            string s = string.Format("电量: {0}, 状态: {1}", packet.data[0], sta);
             DebugLog(s);
         }
 
