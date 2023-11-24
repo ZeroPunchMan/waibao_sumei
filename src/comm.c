@@ -22,17 +22,42 @@ static void SendVersion(void)
     ProtocolSendPack(3, PT_Version, version);
 }
 
-static void SendBattery(uint8_t percent, bool charge)
+static void SendBattery(uint8_t percent, uint8_t batSta)
 {
-    uint8_t data[2] = {percent, charge ? 1 : 0};
+    uint8_t data[2] = {percent, batSta};
     ProtocolSendPack(3, PT_Battery, data);
 }
 
 static void OnRecvStart(ProtoPack_t *pack)
 {
     CL_LOG("recv runpause: %d", pack->data[0]);
-    SysOutput_RunPause(pack->data[0] == 1);
-    ProtocolSendPack(2, PT_RunPause, pack->data);
+    uint8_t result;
+
+    if (pack->data[0] == 1)
+    {
+        switch (GetBatStatus())
+        {
+        case BatSta_Ok:
+            SysOutput_RunPause(true);
+            result = 1;
+            ProtocolSendPack(2, PT_RunPause, &result);
+            break;
+        case BatSta_Low:
+            result = 2;
+            ProtocolSendPack(2, PT_RunPause, &result);
+            break;
+        case BatSta_Charge:
+            result = 3;
+            ProtocolSendPack(2, PT_RunPause, &result);
+            break;
+        }
+    }
+    else if (pack->data[0] == 0)
+    {
+        SysOutput_RunPause(false);
+        result = 0;
+        ProtocolSendPack(2, PT_RunPause, &result);
+    }
 }
 
 static void OnRecvStop(ProtoPack_t *pack)
@@ -96,6 +121,6 @@ void Comm_Process(void)
     {
         lastTime = GetSysTime();
 
-        SendBattery(GetBatPercent(), GetBatStatus() == BatSta_Charge);
+        SendBattery(GetBatPercent(), GetBatStatus());
     }
 }
