@@ -635,10 +635,11 @@ int main(void)
             NRF_LOG_INFO("adc: %d, %d, %d, %d",
                          GetAdcResult(AdcChan_Current),
                          GetAdcResult(AdcChan_ExtVol),
-                         GetAdcResult(AdcChan_Battery0),
+                         GetBatteryAdc(),
                          GetAdcResult(AdcChan_Battery1));
         }
 
+        Adc_Process();
         Comm_Process();
         SysOutput_Process();
         BatMonitor_Process();

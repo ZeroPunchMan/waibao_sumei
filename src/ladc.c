@@ -5,6 +5,7 @@
 #include "nrf_drv_ppi.h"
 #include "nrf_drv_timer.h"
 #include "ladc.h"
+#include "systime.h"
 
 static nrf_saadc_value_t adcResult[4];
 int16_t GetAdcResult(AdcChannel_t chan)
@@ -48,12 +49,12 @@ void saadc_init(void)
     APP_ERROR_CHECK(err_code);
 
     // 外部电压
-    nrf_saadc_channel_config_t battery_config = NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN3); //P0.05 橙色线
+    nrf_saadc_channel_config_t battery_config = NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN3); // P0.05 橙色线
     err_code = nrf_drv_saadc_channel_init(1, &battery_config);
     APP_ERROR_CHECK(err_code);
 
     // 电池电压
-    nrf_saadc_channel_config_t ntc_config = NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN5);//P0.29 绿色线
+    nrf_saadc_channel_config_t ntc_config = NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN5); // P0.29 绿色线
     err_code = nrf_drv_saadc_channel_init(2, &ntc_config);
     APP_ERROR_CHECK(err_code);
 
@@ -86,7 +87,7 @@ void saadc_sampling_event_init(void)
     APP_ERROR_CHECK(err_code);
 
     /* setup m_timer for compare event */
-    uint32_t ticks = nrf_drv_timer_ms_to_ticks(&m_timer, 1000 / 50);
+    uint32_t ticks = nrf_drv_timer_ms_to_ticks(&m_timer, 1000 / 500);
     nrf_drv_timer_extended_compare(&m_timer, NRF_TIMER_CC_CHANNEL0, ticks, NRF_TIMER_SHORT_COMPARE0_CLEAR_MASK, false);
     nrf_drv_timer_enable(&m_timer);
 
@@ -113,4 +114,28 @@ void Adc_Init(void)
     saadc_init();
     saadc_sampling_event_init();
     saadc_sampling_event_enable();
+}
+
+static int16_t batAdcLastSec = 0;
+void Adc_Process(void)
+{
+    static uint32_t batAdcTime = 0;
+    static int16_t batMaxAdc = INT16_MIN;
+    if (SysTimeSpan(batAdcTime) < SYSTIME_SECOND(1))
+    {
+        int16_t curAdc = GetAdcResult(AdcChan_Battery0);
+        if (curAdc > batMaxAdc)
+            batMaxAdc = curAdc;
+    }
+    else
+    {   
+        batAdcLastSec = batMaxAdc;
+        batMaxAdc = INT16_MIN;
+        batAdcTime = GetSysTime();
+    }
+}
+
+int16_t GetBatteryAdc(void)
+{
+    return batAdcLastSec;
 }

@@ -168,13 +168,13 @@ void BatMonitor_Process(void)
     }
 
     static uint32_t lastTime = 0;
-    if (SysTimeSpan(lastTime) >= 300)
+    if (SysTimeSpan(lastTime) >= 1300)
     {
         lastTime = GetSysTime();
 
         extVolAdc = GetAdcResult(AdcChan_ExtVol);
 
-        int16_t batAdc = GetAdcResult(AdcChan_Battery0);
+        int16_t batAdc = GetBatteryAdc();
         batPercent = BatAdcToPercent(batAdc);
     }
 }

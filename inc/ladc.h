@@ -9,4 +9,7 @@ typedef enum
 } AdcChannel_t;
 
 void Adc_Init(void);
+void Adc_Process(void);
+
 int16_t GetAdcResult(AdcChannel_t chan);
+int16_t GetBatteryAdc(void);
