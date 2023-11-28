@@ -11,4 +11,7 @@ typedef enum
 } PwmChannel_t;
 
 void Pwm_Init(void);
-void Pwm_SetOutput(PwmChannel_t chan, uint8_t duty);
+
+void MosRunPause(bool run);
+void MosChanSet(uint8_t chan, uint8_t power, uint8_t freq);
+
