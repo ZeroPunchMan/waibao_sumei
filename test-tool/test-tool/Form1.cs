@@ -413,7 +413,7 @@ namespace UART_demo
                     StringBuilder sb = new StringBuilder();
                     sb.Append("发送: ");
                     foreach (byte b in all)
-                        sb.Append(string.Format("0x{0:x2} ", b));
+                        sb.Append(string.Format("{0:x2} ", b));
 
                     DebugLog(sb.ToString());
                 }
