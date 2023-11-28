@@ -49,7 +49,7 @@ static void MosChanInit(void)
 
 static void MosChanUpdate(volatile MosChanContext_t *ctx)
 {
-    if (!mosChanRun)
+    if (!mosChanRun || !ctx->power)
     {
         nrf_gpio_pin_clear(ctx->freq);
         return;
