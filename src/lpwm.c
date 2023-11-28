@@ -79,7 +79,7 @@ static void MosChanUpdate(volatile MosChanContext_t *ctx)
 void MosChanSet(uint8_t chan, uint8_t power, uint8_t freq)
 {
     mosChanCtx[chan].power = power;
-    mosChanCtx[chan].freq = freq;
+    mosChanCtx[chan].freq = freq - 6;
 }
 
 void MosRunPause(bool run)

@@ -82,7 +82,7 @@ void SgpBleAgent_Process(void)
         {
             if (NRF_SUCCESS == SendWithNotify(sendBuff, sendCount))
             {
-                NRF_LOG_INFO("send %d bytes", sendCount);
+                // NRF_LOG_INFO("send %d bytes", sendCount);
                 sendCount = 0;
             }
             else
