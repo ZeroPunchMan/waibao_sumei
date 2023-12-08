@@ -55,13 +55,13 @@ static void ChargeLedProc(void)
     }
     else if (chargeLedStyle == ChgLedStyle_Charging)
     {
-        nrf_gpio_pin_clear(IND_LED1_PIN);
-        nrf_gpio_pin_set(IND_LED2_PIN);
+        nrf_gpio_pin_set(IND_LED1_PIN);
+        nrf_gpio_pin_clear(IND_LED2_PIN);
     }
     else if (chargeLedStyle == ChgLedStyle_ChargeDone)
     {
-        nrf_gpio_pin_set(IND_LED1_PIN);
-        nrf_gpio_pin_clear(IND_LED2_PIN);
+        nrf_gpio_pin_clear(IND_LED1_PIN);
+        nrf_gpio_pin_set(IND_LED2_PIN);
     }
     else if (chargeLedStyle == ChgLedStyle_Work)
     {

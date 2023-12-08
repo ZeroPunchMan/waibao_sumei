@@ -80,6 +80,7 @@ static void ToCharge(void)
 {
     batStatus = BatSta_Charge;
     CL_LOG("bat charge");
+    SysOutput_Stop();
 }
 
 static void ChargeProc(void)

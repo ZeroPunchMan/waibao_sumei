@@ -115,6 +115,9 @@ namespace UART_demo
                 case 3:
                     sta = "充电中";
                     break;
+                case 4:
+                    sta = "充电满";
+                    break;
             }
             string s = string.Format("电量: {0}, 状态: {1}", packet.data[0], sta);
             DebugLog(s);
