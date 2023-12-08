@@ -398,6 +398,7 @@ static void ble_evt_handler(ble_evt_t const *p_ble_evt, void *p_context)
     case BLE_GAP_EVT_CONNECTED:
         NRF_LOG_INFO("Connected.");
         m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
+        SetBleLed(BleLedStyle_On);
         break;
 
     case BLE_GAP_EVT_DISCONNECTED:
@@ -405,6 +406,7 @@ static void ble_evt_handler(ble_evt_t const *p_ble_evt, void *p_context)
                      p_ble_evt->evt.gap_evt.params.disconnected.reason);
         m_conn_handle = BLE_CONN_HANDLE_INVALID;
         SgpBleAgent_ChangeConnStatus(false);
+        SetBleLed(BleLedStyle_Blink);
         break;
 
     case BLE_GAP_EVT_PHY_UPDATE_REQUEST:

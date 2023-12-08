@@ -37,7 +37,7 @@ static void BleLedProc(void)
     }
     else if (BleLedStyle_On == bleLedStyle)
     {
-        nrf_gpio_pin_set(BLE_LED_PIN);
+        nrf_gpio_pin_clear(BLE_LED_PIN);
     }
 }
 
@@ -50,18 +50,18 @@ static void ChargeLedProc(void)
 {
     if (chargeLedStyle == ChgLedStyle_None)
     {
-        nrf_gpio_pin_clear(IND_LED1_PIN);
-        nrf_gpio_pin_clear(IND_LED2_PIN);
+        nrf_gpio_pin_set(IND_LED1_PIN);
+        nrf_gpio_pin_set(IND_LED2_PIN);
     }
     else if (chargeLedStyle == ChgLedStyle_Charging)
     {
-        nrf_gpio_pin_set(IND_LED1_PIN);
-        nrf_gpio_pin_clear(IND_LED2_PIN);
+        nrf_gpio_pin_clear(IND_LED1_PIN);
+        nrf_gpio_pin_set(IND_LED2_PIN);
     }
     else if (chargeLedStyle == ChgLedStyle_ChargeDone)
     {
-        nrf_gpio_pin_clear(IND_LED1_PIN);
-        nrf_gpio_pin_set(IND_LED2_PIN);
+        nrf_gpio_pin_set(IND_LED1_PIN);
+        nrf_gpio_pin_clear(IND_LED2_PIN);
     }
     else if (chargeLedStyle == ChgLedStyle_Work)
     {

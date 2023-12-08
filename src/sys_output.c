@@ -68,7 +68,7 @@ void SysOutput_RunPause(bool run)
         if (GetBatStatus() != BatSta_Ok)
             return;
 
-        nrf_gpio_pin_set(OUTPUT_EN_PIN);
+        nrf_gpio_pin_set(OUTPUT_EN_PIN); 
         MosRunPause(true);
         runPause = run;
     }

@@ -33,10 +33,10 @@ void SetChargeLed(ChargeLedStyle_t);
 
 typedef enum
 {
-    BreathLed_VerySlow = 200,
-    BreathLed_Slow = 150,
-    BreathLed_Normal = 100,
-    BreathLed_Fast = 75,
-    BreathLed_VeryFast = 50,
+    BreathLed_VerySlow = 100,
+    BreathLed_Slow = 75,
+    BreathLed_Normal = 50,
+    BreathLed_Fast = 35,
+    BreathLed_VeryFast = 15,
 } BreathLedStyle_t;
 void SetBreathLed(BreathLedStyle_t);

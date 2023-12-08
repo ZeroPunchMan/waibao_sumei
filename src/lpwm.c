@@ -109,10 +109,11 @@ void timer_led_event_handler(nrf_timer_event_t event_type, void *p_context)
     MosChanUpdate(mosChanCtx);
     MosChanUpdate(mosChanCtx + 1);
     MosChanUpdate(mosChanCtx + 2);
+    MosChanUpdate(mosChanCtx + 3);
 }
 
 static nrf_drv_pwm_t m_pwm0 = NRF_DRV_PWM_INSTANCE(0);
-static nrf_pwm_values_individual_t /*const*/ seq_values[] = {
+static nrf_pwm_values_individual_t seq_values[] = {
     {100, 100, 100, 100},
 };
 void LedPwmInit(void)
@@ -123,7 +124,7 @@ void LedPwmInit(void)
                 {
                     26, // channel 0
                     27, // channel 1
-                    9, // channel 2
+                    9,  // channel 2
                     10  // channel 3
                 },
             .irq_priority = APP_IRQ_PRIORITY_LOWEST,

@@ -32,7 +32,6 @@ void saadc_callback(nrf_drv_saadc_evt_t const *p_event)
         adcResult[AdcChan_ExtVol] = p_event->data.done.p_buffer[1];
         adcResult[AdcChan_Battery0] = p_event->data.done.p_buffer[2];
         adcResult[AdcChan_Battery1] = p_event->data.done.p_buffer[3];
-        // p_event->data.done.p_buffer[3];
     }
 }
 
@@ -123,7 +122,7 @@ void Adc_Process(void)
     static int16_t batMaxAdc = INT16_MIN;
     if (SysTimeSpan(batAdcTime) < SYSTIME_SECOND(1))
     {
-        int16_t curAdc = GetAdcResult(AdcChan_Battery0);
+        int16_t curAdc = GetAdcResult(AdcChan_Battery1);
         if (curAdc > batMaxAdc)
             batMaxAdc = curAdc;
     }
