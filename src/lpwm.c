@@ -106,19 +106,9 @@ void MosRunPause(bool run)
 //------------------timer---------------------
 void timer_led_event_handler(nrf_timer_event_t event_type, void *p_context)
 {
-    // BreathRgb_Update();
     MosChanUpdate(mosChanCtx);
     MosChanUpdate(mosChanCtx + 1);
     MosChanUpdate(mosChanCtx + 2);
-    MosChanUpdate(mosChanCtx + 3);
-
-    // uint32_t sumOfPwr = 0;
-    // for (int i = 0; i < CL_ARRAY_LENGTH(mosChanCtx); i++)
-    //     sumOfPwr += mosChanCtx[i].power;
-
-    // sumOfPwr /= 80;
-    // sumOfPwr = CL_MIN(sumOfPwr, BLF_Freq4);
-    // BreatRgb_SetFreq(sumOfPwr, sumOfPwr, sumOfPwr);
 }
 
 static nrf_drv_pwm_t m_pwm0 = NRF_DRV_PWM_INSTANCE(0);

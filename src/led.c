@@ -85,7 +85,6 @@ static void ChargeLedProc(void)
         }
     }
 
-    //todo 根据状态来设置
     BatStatus_t batSta = GetBatStatus();
     uint32_t sysSta = GetSysOutput();
     if(sysSta)
@@ -110,7 +109,7 @@ static void ChargeLedProc(void)
     }
 }
 
-static BreathLedStyle_t breathLedStyle = BreathLed_Slow;
+static BreathLedStyle_t breathLedStyle = BreathLed_VerySlow;
 void SetBreathLed(BreathLedStyle_t s)
 {
     breathLedStyle = s;
