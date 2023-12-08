@@ -5,6 +5,10 @@
 
 #define RGB_MAX_LEVEL (40)
 
+#define RED_PIN (NRF_GPIO_PIN_MAP(0, 26))
+#define GREEN_PIN (NRF_GPIO_PIN_MAP(0, 27))
+#define BLUE_PIN (NRF_GPIO_PIN_MAP(0, 20))
+
 static volatile uint8_t rgbLevel[3] = {0, 0, 0};
 static volatile uint8_t rgbDir[3] = {1, 1, 1};
 static volatile bool initialized = false;
@@ -14,9 +18,9 @@ static volatile uint8_t rgbBreathIntvl[3] = {30, 30, 30};
 void BreathRgb_Init(void)
 {
     initialized = true;
-    nrf_gpio_cfg_output(NRF_GPIO_PIN_MAP(0, 25)); // r
-    nrf_gpio_cfg_output(NRF_GPIO_PIN_MAP(0, 26)); // g
-    nrf_gpio_cfg_output(NRF_GPIO_PIN_MAP(0, 27)); // b
+    nrf_gpio_cfg_output(RED_PIN); // r
+    nrf_gpio_cfg_output(GREEN_PIN); // g
+    nrf_gpio_cfg_output(BLUE_PIN); // b
 
     BreathRgb_Enable(true);
 }
@@ -30,9 +34,9 @@ void BreathRgb_Enable(bool en)
     else
     {
         rgbEnable = false;
-        nrf_gpio_pin_set(NRF_GPIO_PIN_MAP(0, 25));
-        nrf_gpio_pin_set(NRF_GPIO_PIN_MAP(0, 26));
-        nrf_gpio_pin_set(NRF_GPIO_PIN_MAP(0, 27));
+        nrf_gpio_pin_set(RED_PIN);
+        nrf_gpio_pin_set(GREEN_PIN);
+        nrf_gpio_pin_set(BLUE_PIN);
 
         for (int i = 0; i < 3; i++)
         {
@@ -46,9 +50,9 @@ void BreathRgb_Update(void)
     if (!initialized || !rgbEnable)
         return;
 
-    // 亮度变化,每100ms变化一次
+    // 亮度变化
     static uint32_t levelTime = 0;
-    if (SysTimeSpan(levelTime) >= rgbBreathIntvl[0]) // todo 多个灯单独处理？
+    if (SysTimeSpan(levelTime) >= rgbBreathIntvl[0]) 
     {
         levelTime = GetSysTime();
 
@@ -77,21 +81,21 @@ void BreathRgb_Update(void)
 
     // R
     if (rgbCount[0] < rgbLevel[0])
-        nrf_gpio_pin_clear(NRF_GPIO_PIN_MAP(0, 25));
+        nrf_gpio_pin_clear(RED_PIN);
     else
-        nrf_gpio_pin_set(NRF_GPIO_PIN_MAP(0, 25));
+        nrf_gpio_pin_set(RED_PIN);
 
     // G
     if (rgbCount[1] < rgbLevel[1])
-        nrf_gpio_pin_clear(NRF_GPIO_PIN_MAP(0, 26));
+        nrf_gpio_pin_clear(GREEN_PIN);
     else
-        nrf_gpio_pin_set(NRF_GPIO_PIN_MAP(0, 26));
+        nrf_gpio_pin_set(GREEN_PIN);
 
     // B
     if (rgbCount[2] < rgbLevel[2])
-        nrf_gpio_pin_clear(NRF_GPIO_PIN_MAP(0, 27));
+        nrf_gpio_pin_clear(BLUE_PIN);
     else
-        nrf_gpio_pin_set(NRF_GPIO_PIN_MAP(0, 27));
+        nrf_gpio_pin_set(BLUE_PIN);
 }
 
 static const uint8_t freqIntvlTable[BLF_FreqMax] = {50, 45, 40, 35, 30};

@@ -6,22 +6,22 @@
 #include "bat_monitor.h"
 #include "breath_rgb.h"
 
+#define OUTPUT_EN_PIN (NRF_GPIO_PIN_MAP(0, 2))
 
 void SysOutput_Init(void)
 {
-    nrf_gpio_cfg_output(NRF_GPIO_PIN_MAP(0, 11));
-    nrf_gpio_pin_clear(NRF_GPIO_PIN_MAP(0, 11));
+    nrf_gpio_cfg_output(OUTPUT_EN_PIN);
+    nrf_gpio_pin_clear(OUTPUT_EN_PIN);
 }
 
 void SysOutput_Process(void)
 {
-
 }
 
 void SysOutput_Stop()
 {
     SysOutput_RunPause(false);
-    nrf_gpio_pin_clear(NRF_GPIO_PIN_MAP(0, 11));
+    nrf_gpio_pin_clear(OUTPUT_EN_PIN);
 }
 
 void SysOutput_RunPause(bool run)
@@ -29,14 +29,13 @@ void SysOutput_RunPause(bool run)
     if (!run)
     {
         MosRunPause(false);
-
     }
     else
     {
         if (GetBatStatus() != BatSta_Ok)
             return;
 
-        nrf_gpio_pin_set(NRF_GPIO_PIN_MAP(0, 11));
+        nrf_gpio_pin_set(OUTPUT_EN_PIN);
         MosRunPause(true);
     }
 }

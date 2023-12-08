@@ -21,10 +21,10 @@ static const uint32_t freqTable[5] = {1667, 1429, 1250, 1111, 1000};
 
 volatile static MosChanContext_t mosChanCtx[4] =
     {
-        [0] = {.freq = 0, .power = 0, .pin = NRF_GPIO_PIN_MAP(0, 19), .count = 0, .work = false},
-        [1] = {.freq = 0, .power = 0, .pin = NRF_GPIO_PIN_MAP(0, 15), .count = 0, .work = false},
+        [0] = {.freq = 0, .power = 0, .pin = NRF_GPIO_PIN_MAP(0, 12), .count = 0, .work = false},
+        [1] = {.freq = 0, .power = 0, .pin = NRF_GPIO_PIN_MAP(0, 14), .count = 0, .work = false},
         [2] = {.freq = 0, .power = 0, .pin = NRF_GPIO_PIN_MAP(0, 16), .count = 0, .work = false},
-        [3] = {.freq = 0, .power = 0, .pin = NRF_GPIO_PIN_MAP(0, 17), .count = 0, .work = false},
+        [3] = {.freq = 0, .power = 0, .pin = NRF_GPIO_PIN_MAP(0, 15), .count = 0, .work = false},
 };
 volatile static bool mosChanRun = false;
 
