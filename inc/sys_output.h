@@ -9,3 +9,4 @@ void SysOutput_Stop();
 void SysOutput_RunPause(bool en);
 void SysOutput_SetChannel(uint8_t chan, uint8_t power, uint8_t freq);
 
+uint32_t GetSysOutput(void);

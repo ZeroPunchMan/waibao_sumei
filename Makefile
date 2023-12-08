@@ -85,7 +85,7 @@ SRC_FILES += \
   $(PROJ_DIR)/src/comm.c \
   $(PROJ_DIR)/src/lpwm.c \
   $(PROJ_DIR)/src/ladc.c \
-  $(PROJ_DIR)/src/breath_rgb.c \
+  $(PROJ_DIR)/src/led.c \
   $(PROJ_DIR)/src/sys_output.c \
   $(PROJ_DIR)/src/bat_monitor.c \
   $(PROJ_DIR)/clib/src/cl_event_system.c \

@@ -9,6 +9,7 @@ typedef enum
     BatSta_Ok = 1,
     BatSta_Low = 2,
     BatSta_Charge = 3,
+    BatSta_ChargeFull = 4,
 } BatStatus_t;
 
 void BatMonitor_Init(void);

@@ -47,6 +47,7 @@ static void OnRecvStart(ProtoPack_t *pack)
             ProtocolSendPack(2, PT_RunPause, &result);
             break;
         case BatSta_Charge:
+        case BatSta_ChargeFull:
             result = 3;
             ProtocolSendPack(2, PT_RunPause, &result);
             break;

@@ -36,9 +36,9 @@
 #include "comm.h"
 #include "ladc.h"
 #include "lpwm.h"
-#include "breath_rgb.h"
 #include "sys_output.h"
 #include "bat_monitor.h"
+#include "led.h"
 
 #define SYSTIME_INTERVAL 2 // ms
 #define TIMER_INTERVAL APP_TIMER_TICKS(SYSTIME_INTERVAL)
@@ -618,9 +618,9 @@ int main(void)
     application_timers_start();
     advertising_start(erase_bonds);
 
-    BreathRgb_Init();
     Pwm_Init();
     Adc_Init();
+    Led_Init();
     Comm_Init();
     SysOutput_Init();
     BatMonitor_Init();
@@ -639,6 +639,7 @@ int main(void)
                          GetAdcResult(AdcChan_Battery1));
         }
 
+        Led_Process();
         Adc_Process();
         Comm_Process();
         SysOutput_Process();
@@ -663,8 +664,6 @@ int main(void)
 // pwm: P0.15 P0.16 P0.17 P0.19-电机;
 // 	P0.27 P0.26 P0.25-呼吸灯;
 
-
 // 1.呼吸灯没找到(P0-27\P0-26\P0-25)
 // 2.开启PWM输出会导致MCU掉电重启
 // 3.充电灯未亮(P0.09/P0.10)
-

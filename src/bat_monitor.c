@@ -4,10 +4,9 @@
 #include "cl_log.h"
 #include "systime.h"
 #include "sys_output.h"
+#include "led.h"
 
 #define EXT_VOL_THRESH (VOLTAGE_TO_ADC(0.8f))
-#define IND_LED1_PIN (NRF_GPIO_PIN_MAP(0, 9))
-#define IND_LED2_PIN (NRF_GPIO_PIN_MAP(0, 10))
 
 static BatStatus_t batStatus = BatSta_Ok;
 static uint8_t batPercent = 100;
@@ -16,8 +15,6 @@ static int16_t extVolAdc = 0;
 void BatMonitor_Init(void)
 {
     nrf_gpio_cfg_input(NRF_GPIO_PIN_MAP(0, 25), NRF_GPIO_PIN_PULLUP); // 充电检测
-    nrf_gpio_cfg_output(IND_LED1_PIN);                      // 充电指示灯1
-    nrf_gpio_cfg_output(IND_LED2_PIN);                     // 充电指示灯2
 }
 
 static inline bool IsChargeFull(void)
@@ -25,38 +22,11 @@ static inline bool IsChargeFull(void)
     return nrf_gpio_pin_read(NRF_GPIO_PIN_MAP(0, 25)) == 0;
 }
 
-typedef enum
-{
-    ChgSta_None,
-    ChgSta_NotFull,
-    ChgSta_Full,
-} ChargeSta_t;
-
-static inline void SetChargeIndLed(ChargeSta_t sta)
-{
-    switch (sta)
-    {
-    case ChgSta_None:
-        nrf_gpio_pin_clear(IND_LED1_PIN);
-        nrf_gpio_pin_clear(IND_LED2_PIN);
-        break;
-    case ChgSta_NotFull:
-        nrf_gpio_pin_set(IND_LED1_PIN);
-        nrf_gpio_pin_clear(IND_LED2_PIN);
-        break;
-    case ChgSta_Full:
-        nrf_gpio_pin_clear(IND_LED1_PIN);
-        nrf_gpio_pin_set(IND_LED2_PIN);
-        break;
-    }
-}
-
 static void ToLow(void);
 static void ToCharge(void);
 static void ToOk(void)
 {
     batStatus = BatSta_Ok;
-    SetChargeIndLed(ChgSta_None);
     CL_LOG("bat ok");
 }
 
@@ -79,7 +49,6 @@ static void ToLow(void)
     batStatus = BatSta_Low;
     stopOutput = false;
     lowStartTime = GetSysTime();
-    SetChargeIndLed(ChgSta_None);
     CL_LOG("bat low");
 }
 
@@ -100,7 +69,7 @@ static void LowProc(void)
                 CL_LOG("low bat, stop output");
             }
         }
-        if(batPercent >= 50)
+        if (batPercent >= 50)
         {
             ToOk();
         }
@@ -117,10 +86,6 @@ static void ChargeProc(void)
 {
     if (extVolAdc > EXT_VOL_THRESH)
     {
-        if (IsChargeFull())
-            SetChargeIndLed(ChgSta_Full);
-        else
-            SetChargeIndLed(ChgSta_NotFull);
     }
     else
     {
@@ -166,6 +131,7 @@ void BatMonitor_Process(void)
         LowProc();
         break;
     case BatSta_Charge:
+    case BatSta_ChargeFull:
         ChargeProc();
         break;
     }
@@ -184,6 +150,10 @@ void BatMonitor_Process(void)
 
 BatStatus_t GetBatStatus(void)
 {
+    if (batStatus == BatSta_Charge && IsChargeFull())
+    {
+        return BatSta_ChargeFull;
+    }
     return batStatus;
 }
 
