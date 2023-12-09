@@ -4,6 +4,7 @@
 #include "nrf_drv_timer.h"
 #include "cl_log.h"
 #include "nrf_gpio.h"
+#include "systime.h"
 
 //--------------------pwm------------------------------
 typedef struct
@@ -12,30 +13,112 @@ typedef struct
     uint8_t power;
     uint32_t pin;
 
-    uint16_t count;
+    uint32_t lastPulseTime;
     bool work;
 } MosChanContext_t;
 
 void timer_led_event_handler(nrf_timer_event_t event_type, void *p_context);
 
-static const uint32_t freqTable[5] = {1667, 1429, 1250, 1111, 1000};
+static const uint32_t freqTable[5] = {167, 143, 125, 111, 100};
 
 volatile static MosChanContext_t mosChanCtx[4] = {
-    [0] = {.freq = 0, .power = 0, .pin = NRF_GPIO_PIN_MAP(0, 12), .count = 0, .work = false},
-    [1] = {.freq = 0, .power = 0, .pin = NRF_GPIO_PIN_MAP(0, 14), .count = 0, .work = false},
-    [2] = {.freq = 0, .power = 0, .pin = NRF_GPIO_PIN_MAP(0, 16), .count = 0, .work = false},
-    [3] = {.freq = 0, .power = 0, .pin = NRF_GPIO_PIN_MAP(0, 15), .count = 0, .work = false},
+    [0] = {.freq = 0, .power = 0, .pin = NRF_GPIO_PIN_MAP(0, 12), .lastPulseTime = 0, .work = false},
+    [1] = {.freq = 0, .power = 0, .pin = NRF_GPIO_PIN_MAP(0, 14), .lastPulseTime = 0, .work = false},
+    [2] = {.freq = 0, .power = 0, .pin = NRF_GPIO_PIN_MAP(0, 16), .lastPulseTime = 0, .work = false},
+    [3] = {.freq = 0, .power = 0, .pin = NRF_GPIO_PIN_MAP(0, 15), .lastPulseTime = 0, .work = false},
 };
 volatile static bool mosChanRun = false;
 
-static inline uint32_t FreqToCount(uint8_t freq)
+static void PulseLevel1(uint32_t pin)
 {
-    return freqTable[freq];
+    nrf_gpio_pin_set(pin);
+    //2us
+    nrf_gpio_pin_clear(pin);
 }
 
-static inline uint32_t PowerToCount(uint8_t power)
+static void PulseLevel2(uint32_t pin)
 {
-    return power / 10;
+    nrf_gpio_pin_set(pin);
+    //3.5us
+    nrf_gpio_pin_clear(pin);
+}
+
+static void PulseLevel3(uint32_t pin)
+{
+    nrf_gpio_pin_set(pin);
+    //5us
+    nrf_gpio_pin_clear(pin);
+}
+
+static void PulseLevel4(uint32_t pin)
+{
+    nrf_gpio_pin_set(pin);
+    //6.5us
+
+    nrf_gpio_pin_clear(pin);
+}
+
+static void PulseLevel5(uint32_t pin)
+{
+    nrf_gpio_pin_set(pin);
+    //8us
+    nrf_gpio_pin_clear(pin);
+}
+
+static void PulseLevel6(uint32_t pin)
+{
+    nrf_gpio_pin_set(pin);
+    //9.5us
+    nrf_gpio_pin_clear(pin);
+}
+
+static void PulseLevel7(uint32_t pin)
+{
+    nrf_gpio_pin_set(pin);
+    //11us
+    nrf_gpio_pin_clear(pin);
+}
+
+static void PulseLevel8(uint32_t pin)
+{
+    nrf_gpio_pin_set(pin);
+    //12.5us
+    nrf_gpio_pin_clear(pin);
+}
+
+static void PulseLevel9(uint32_t pin)
+{
+    nrf_gpio_pin_set(pin);
+    //14us
+    nrf_gpio_pin_clear(pin);
+}
+
+static void PulseLevel10(uint32_t pin)
+{
+    nrf_gpio_pin_set(pin);
+    //15.5us
+    nrf_gpio_pin_clear(pin);
+}
+
+typedef void (*PulseFunc)(uint32_t pin);
+static const PulseFunc pulseFunc[10] = {
+    PulseLevel1,
+    PulseLevel2,
+    PulseLevel3,
+    PulseLevel4,
+    PulseLevel5,
+    PulseLevel6,
+    PulseLevel7,
+    PulseLevel8,
+    PulseLevel9,
+    PulseLevel10,
+};
+
+static inline void DoPulse(uint32_t pin, uint8_t power)
+{
+    power = (power + 9) / 10;
+    power = CL_CLAMP(power, 1, 10);
+    pulseFunc[power - 1](pin);
 }
 
 const nrf_drv_timer_t TIMER_LED = NRF_DRV_TIMER_INSTANCE(2);
@@ -55,7 +138,7 @@ static void MosChanInit(void)
     err_code = nrf_drv_timer_init(&TIMER_LED, &timer_cfg, timer_led_event_handler);
     APP_ERROR_CHECK(err_code);
 
-    time_ticks = nrf_drv_timer_us_to_ticks(&TIMER_LED, 100);
+    time_ticks = nrf_drv_timer_ms_to_ticks(&TIMER_LED, 5);
     CL_LOG("ticks: %d", time_ticks);
     nrf_drv_timer_extended_compare(
         &TIMER_LED, NRF_TIMER_CC_CHANNEL0, time_ticks, NRF_TIMER_SHORT_COMPARE0_CLEAR_MASK, true);
@@ -63,33 +146,23 @@ static void MosChanInit(void)
     nrf_drv_timer_enable(&TIMER_LED);
 }
 
-static void MosChanUpdate(volatile MosChanContext_t *ctx)
+static bool MosChanUpdate(volatile MosChanContext_t *ctx)
 {
     if (!mosChanRun || !ctx->power)
     {
         nrf_gpio_pin_clear(ctx->freq);
-        return;
+        return false;
     }
 
-    ctx->count++;
-    if (ctx->work)
+    if (SysTimeSpan(ctx->lastPulseTime) >= freqTable[ctx->freq])
     {
-        if (ctx->count >= PowerToCount(ctx->power))
-        {
-            ctx->work = false;
-            ctx->count = 0;
-            nrf_gpio_pin_clear(ctx->pin);
-        }
+        DoPulse(ctx->pin, ctx->power);
+
+        ctx->lastPulseTime = GetSysTime();
+        return true;
     }
-    else
-    {
-        if (ctx->count >= FreqToCount(ctx->freq))
-        {
-            ctx->work = true;
-            ctx->count = 0;
-            nrf_gpio_pin_set(ctx->pin);
-        }
-    }
+
+    return false;
 }
 
 void MosChanSet(uint8_t chan, uint8_t power, uint8_t freq)
@@ -106,10 +179,11 @@ void MosRunPause(bool run)
 //------------------timer---------------------
 void timer_led_event_handler(nrf_timer_event_t event_type, void *p_context)
 {
-    MosChanUpdate(mosChanCtx);
-    MosChanUpdate(mosChanCtx + 1);
-    MosChanUpdate(mosChanCtx + 2);
-    MosChanUpdate(mosChanCtx + 3);
+    for (int i = 0; i < CL_ARRAY_LENGTH(mosChanCtx); i++)
+    {
+        if (MosChanUpdate(mosChanCtx + i))
+            break;
+    }
 }
 
 static nrf_drv_pwm_t m_pwm0 = NRF_DRV_PWM_INSTANCE(0);
