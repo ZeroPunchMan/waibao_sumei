@@ -29,74 +29,91 @@ volatile static MosChanContext_t mosChanCtx[4] = {
 };
 volatile static bool mosChanRun = false;
 
+volatile static int delay = 0;
+static void PulseDelay(int x)
+{
+    delay = 0;
+    for (; delay < x; delay++)
+        ;
+}
+
 static void PulseLevel1(uint32_t pin)
 {
     nrf_gpio_pin_set(pin);
-    //2us
+    // 2us
+    PulseDelay(5);
     nrf_gpio_pin_clear(pin);
 }
 
 static void PulseLevel2(uint32_t pin)
 {
     nrf_gpio_pin_set(pin);
-    //3.5us
+    // 3.5us
+    PulseDelay(10);
     nrf_gpio_pin_clear(pin);
 }
 
 static void PulseLevel3(uint32_t pin)
 {
     nrf_gpio_pin_set(pin);
-    //5us
+    // 5us
+    PulseDelay(15);
     nrf_gpio_pin_clear(pin);
 }
 
 static void PulseLevel4(uint32_t pin)
 {
     nrf_gpio_pin_set(pin);
-    //6.5us
-
+    // 6.5us
+    PulseDelay(20);
     nrf_gpio_pin_clear(pin);
 }
 
 static void PulseLevel5(uint32_t pin)
 {
     nrf_gpio_pin_set(pin);
-    //8us
+    // 8us
+    PulseDelay(25);
     nrf_gpio_pin_clear(pin);
 }
 
 static void PulseLevel6(uint32_t pin)
 {
     nrf_gpio_pin_set(pin);
-    //9.5us
+    // 9.5us
+    PulseDelay(30);
     nrf_gpio_pin_clear(pin);
 }
 
 static void PulseLevel7(uint32_t pin)
 {
     nrf_gpio_pin_set(pin);
-    //11us
+    // 11us
+    PulseDelay(35);
     nrf_gpio_pin_clear(pin);
 }
 
 static void PulseLevel8(uint32_t pin)
 {
     nrf_gpio_pin_set(pin);
-    //12.5us
+    // 12.5us
+    PulseDelay(40);
     nrf_gpio_pin_clear(pin);
 }
 
 static void PulseLevel9(uint32_t pin)
 {
     nrf_gpio_pin_set(pin);
-    //14us
+    // 14us
+    PulseDelay(45);
     nrf_gpio_pin_clear(pin);
 }
 
 static void PulseLevel10(uint32_t pin)
 {
     nrf_gpio_pin_set(pin);
-    //15.5us
+    // 15.5us
+    PulseDelay(50);
     nrf_gpio_pin_clear(pin);
 }
 
@@ -116,7 +133,8 @@ static const PulseFunc pulseFunc[10] = {
 
 static inline void DoPulse(uint32_t pin, uint8_t power)
 {
-    power = (power + 9) / 10;
+    // power = (power + 9) / 10;
+    power /= 10;
     power = CL_CLAMP(power, 1, 10);
     pulseFunc[power - 1](pin);
 }
