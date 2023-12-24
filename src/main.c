@@ -406,6 +406,7 @@ static void ble_evt_handler(ble_evt_t const *p_ble_evt, void *p_context)
                      p_ble_evt->evt.gap_evt.params.disconnected.reason);
         m_conn_handle = BLE_CONN_HANDLE_INVALID;
         SgpBleAgent_ChangeConnStatus(false);
+        SysOutput_Stop();
         SetBleLed(BleLedStyle_Blink);
         break;
 

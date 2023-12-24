@@ -94,9 +94,8 @@ static void ChargeProc(void)
     }
 }
 
-static const int16_t batAdcTable[11] = {
-    VOLTAGE_TO_ADC(4.2f / 2),  // 100
-    VOLTAGE_TO_ADC(4.06f / 2), // 90
+static const int16_t batAdcTable[10] = {
+    VOLTAGE_TO_ADC(4.04f / 2), // 90
     VOLTAGE_TO_ADC(3.98f / 2), // 80
     VOLTAGE_TO_ADC(3.92f / 2), // 70
     VOLTAGE_TO_ADC(3.87f / 2), // 60
@@ -138,7 +137,7 @@ void BatMonitor_Process(void)
     }
 
     static uint32_t lastTime = 0;
-    if (SysTimeSpan(lastTime) >= 1300)
+    if (SysTimeSpan(lastTime) >= 1500)
     {
         lastTime = GetSysTime();
 

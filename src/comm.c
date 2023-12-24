@@ -17,7 +17,7 @@ typedef enum
 
 static void SendVersion(void)
 {
-    uint8_t version[2] = {0, 3};
+    uint8_t version[2] = {0, 4};
     CL_LOG("send version");
     ProtocolSendPack(3, PT_Version, version);
 }

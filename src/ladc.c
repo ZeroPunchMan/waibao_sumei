@@ -120,7 +120,7 @@ void Adc_Process(void)
 {
     static uint32_t batAdcTime = 0;
     static int16_t batMaxAdc = INT16_MIN;
-    if (SysTimeSpan(batAdcTime) < SYSTIME_SECOND(1))
+    if (SysTimeSpan(batAdcTime) < 300)
     {
         int16_t curAdc = GetAdcResult(AdcChan_Battery1);
         if (curAdc > batMaxAdc)
