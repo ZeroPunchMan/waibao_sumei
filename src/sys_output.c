@@ -54,6 +54,7 @@ void SysOutput_Stop()
 {
     SysOutput_RunPause(false);
     nrf_gpio_pin_clear(OUTPUT_EN_PIN);
+    CL_LOG("stop output");
 }
 
 void SysOutput_RunPause(bool run)
