@@ -102,8 +102,8 @@ typedef struct
 
 static const batStageDef_t batStageDef[5] = {
     {.minAdc = VOLTAGE_TO_ADC(3.45f / 2), .maxAdc = VOLTAGE_TO_ADC(3.75f / 2)},  // 0
-    {.minAdc = VOLTAGE_TO_ADC(3.7f / 2), .maxAdc = VOLTAGE_TO_ADC(3.81f / 2)},   // 1
-    {.minAdc = VOLTAGE_TO_ADC(3.775f / 2), .maxAdc = VOLTAGE_TO_ADC(3.89f / 2)}, // 2
+    {.minAdc = VOLTAGE_TO_ADC(3.72f / 2), .maxAdc = VOLTAGE_TO_ADC(3.81f / 2)},   // 1
+    {.minAdc = VOLTAGE_TO_ADC(3.78f / 2), .maxAdc = VOLTAGE_TO_ADC(3.89f / 2)}, // 2
     {.minAdc = VOLTAGE_TO_ADC(3.86f / 2), .maxAdc = VOLTAGE_TO_ADC(4.02f / 2)},  // 3
     {.minAdc = VOLTAGE_TO_ADC(3.99f / 2), .maxAdc = VOLTAGE_TO_ADC(4.2f / 2)},   // 4
 };
