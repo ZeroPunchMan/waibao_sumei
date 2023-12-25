@@ -76,14 +76,14 @@ namespace UART_demo
             packet.len = 9;
             packet.type = (byte)ProtocolHelper.FunctionCode.Motors;
 
-            packet.data[0] = 0;
-            packet.data[1] = 5;
+            packet.data[0] = 100;
+            packet.data[1] = 10;
 
-            packet.data[2] = 33;
-            packet.data[3] = 7;
+            packet.data[2] = 100;
+            packet.data[3] = 10;
 
-            packet.data[4] = 67;
-            packet.data[5] = 9;
+            packet.data[4] = 100;
+            packet.data[5] = 10;
 
             packet.data[6] = 100;
             packet.data[7] = 10;

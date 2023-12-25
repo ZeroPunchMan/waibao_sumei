@@ -2,7 +2,7 @@
 
 #include "cl_common.h"
 
-#define VOLTAGE_TO_ADC(vol) ((vol)*1000 / 3.6f)
+#define VOLTAGE_TO_ADC(vol) ((vol) * 1000 / 3.6f)
 
 typedef enum
 {
