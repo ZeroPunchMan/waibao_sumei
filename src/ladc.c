@@ -6,6 +6,7 @@
 #include "nrf_drv_timer.h"
 #include "ladc.h"
 #include "systime.h"
+#include "cl_log.h"
 
 static nrf_saadc_value_t adcResult[4];
 int16_t GetAdcResult(AdcChannel_t chan)
@@ -48,12 +49,12 @@ void saadc_init(void)
     APP_ERROR_CHECK(err_code);
 
     // 外部电压
-    nrf_saadc_channel_config_t battery_config = NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN7); 
+    nrf_saadc_channel_config_t battery_config = NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN7);
     err_code = nrf_drv_saadc_channel_init(1, &battery_config);
     APP_ERROR_CHECK(err_code);
 
     // 电池电压
-    nrf_saadc_channel_config_t ntc_config = NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN4); 
+    nrf_saadc_channel_config_t ntc_config = NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN4);
     err_code = nrf_drv_saadc_channel_init(2, &ntc_config);
     APP_ERROR_CHECK(err_code);
 
@@ -116,7 +117,7 @@ void Adc_Init(void)
 }
 
 static int16_t batAdcLastSec = 0;
-void Adc_Process(void)
+static void BatAdcFilter(void)
 {
     static uint32_t batAdcTime = 0;
     static int16_t batMaxAdc = INT16_MIN;
@@ -127,11 +128,40 @@ void Adc_Process(void)
             batMaxAdc = curAdc;
     }
     else
-    {   
+    {
         batAdcLastSec = batMaxAdc;
         batMaxAdc = INT16_MIN;
         batAdcTime = GetSysTime();
     }
+}
+
+static int16_t chgAdcMin = INT16_MAX;
+static int16_t chgAdcMax = INT16_MIN;
+static void ChargeAdcFilter(void)
+{
+    static uint32_t windowTime = 0;
+    if(SysTimeSpan(windowTime) < 1000)
+    {
+        int16_t curAdc = GetAdcResult(AdcChan_Current);
+        if(curAdc > chgAdcMax)
+            chgAdcMax = curAdc;
+        
+        if(curAdc < chgAdcMin)
+            chgAdcMin = curAdc;
+    }
+    else
+    {
+        CL_LOG("chg: %d, %d", chgAdcMin, chgAdcMax);
+        chgAdcMin = INT16_MAX;
+        chgAdcMax = INT16_MIN;
+        windowTime = GetSysTime();
+    }
+}
+
+void Adc_Process(void)
+{
+    BatAdcFilter();
+    ChargeAdcFilter();
 }
 
 int16_t GetBatteryAdc(void)

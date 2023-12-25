@@ -9,7 +9,6 @@
 #define EXT_VOL_THRESH (VOLTAGE_TO_ADC(0.8f))
 
 static BatStatus_t batStatus = BatSta_Ok;
-static uint8_t batPercent = 100;
 static int16_t extVolAdc = 0;
 
 void BatMonitor_Init(void)
@@ -36,7 +35,7 @@ static void OkProc(void)
     {
         ToCharge();
     }
-    else if (batPercent <= 30)
+    else if (GetBatPercent() <= 30)
     {
         ToLow();
     }
@@ -69,7 +68,7 @@ static void LowProc(void)
                 CL_LOG("low bat, stop output");
             }
         }
-        if (batPercent >= 50)
+        if (GetBatPercent() >= 40)
         {
             ToOk();
         }
@@ -94,30 +93,52 @@ static void ChargeProc(void)
     }
 }
 
-static const int16_t batAdcTable[10] = {
-    VOLTAGE_TO_ADC(4.04f / 2), // 90
-    VOLTAGE_TO_ADC(3.98f / 2), // 80
-    VOLTAGE_TO_ADC(3.92f / 2), // 70
-    VOLTAGE_TO_ADC(3.87f / 2), // 60
-    VOLTAGE_TO_ADC(3.82f / 2), // 50
-    VOLTAGE_TO_ADC(3.79f / 2), // 40
-    VOLTAGE_TO_ADC(3.77f / 2), // 30
-    VOLTAGE_TO_ADC(3.74f / 2), // 20
-    VOLTAGE_TO_ADC(3.68f / 2), // 10
-    VOLTAGE_TO_ADC(3.0f / 2),  // 0
-};
-static inline uint8_t BatAdcToPercent(int16_t adc)
+int8_t batteryStage = 4;
+
+typedef struct
 {
-    uint8_t offset = 0;
-    for (uint8_t i = 0; i < CL_ARRAY_LENGTH(batAdcTable); i++)
+    uint16_t minAdc, maxAdc;
+} batStageDef_t;
+
+static const batStageDef_t batStageDef[5] = {
+    {.minAdc = VOLTAGE_TO_ADC(3.45f / 2), .maxAdc = VOLTAGE_TO_ADC(3.75f / 2)},  // 0
+    {.minAdc = VOLTAGE_TO_ADC(3.7f / 2), .maxAdc = VOLTAGE_TO_ADC(3.81f / 2)},   // 1
+    {.minAdc = VOLTAGE_TO_ADC(3.775f / 2), .maxAdc = VOLTAGE_TO_ADC(3.89f / 2)}, // 2
+    {.minAdc = VOLTAGE_TO_ADC(3.86f / 2), .maxAdc = VOLTAGE_TO_ADC(4.02f / 2)},  // 3
+    {.minAdc = VOLTAGE_TO_ADC(3.99f / 2), .maxAdc = VOLTAGE_TO_ADC(4.2f / 2)},   // 4
+};
+
+static void DoUpdateStage(uint16_t adcVal)
+{
+    const batStageDef_t *stageParam = batStageDef + batteryStage;
+    if (adcVal > stageParam->maxAdc)
     {
-        offset = i;
-        if (adc >= batAdcTable[i])
-        {
-            break;
-        }
+        if (batteryStage < CL_ARRAY_LENGTH(batStageDef) - 1)
+            batteryStage++;
     }
-    return 100 - offset * 10;
+    else if (adcVal < stageParam->minAdc)
+    {
+        if (batteryStage > 0)
+            batteryStage--;
+    }
+}
+
+static void UpdateBatStage(uint16_t adcVal)
+{
+    static bool firstTime = true;
+
+    if (firstTime)
+    {
+        for (int i = 0; i < CL_ARRAY_LENGTH(batStageDef) - 1; i++)
+        {
+            DoUpdateStage(adcVal);
+        }
+        firstTime = false;
+    }
+    else
+    {
+        DoUpdateStage(adcVal);
+    }
 }
 
 void BatMonitor_Process(void)
@@ -144,7 +165,8 @@ void BatMonitor_Process(void)
         extVolAdc = GetAdcResult(AdcChan_ExtVol);
 
         int16_t batAdc = GetBatteryAdc();
-        batPercent = BatAdcToPercent(batAdc);
+        // todo 减去充电压差
+        UpdateBatStage(batAdc); // todo review
     }
 }
 
@@ -159,5 +181,5 @@ BatStatus_t GetBatStatus(void)
 
 uint8_t GetBatPercent(void)
 {
-    return batPercent;
+    return (batteryStage + 1) * 20;
 }
