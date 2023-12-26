@@ -120,7 +120,7 @@ void Adc_Init(void)
 CL_QUEUE_DEF_INIT(batQueue, 100, int16_t, static);
 static int16_t BatFilter(int16_t batVal)
 {
-    static int16_t sum = 0;
+    static int32_t sum = 0;
     if (batVal > 1023)
         batVal = 1023;
 
@@ -141,7 +141,7 @@ static int16_t BatFilter(int16_t batVal)
 CL_QUEUE_DEF_INIT(chargeQueue, 100, int16_t, static);
 static int16_t ChargeFilter(int16_t adcVal)
 {
-    static int16_t sum = 0;
+    static int32_t sum = 0;
     if (adcVal > 1023)
         adcVal = 1023;
 
