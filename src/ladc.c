@@ -117,7 +117,7 @@ void Adc_Init(void)
     saadc_sampling_event_enable();
 }
 
-CL_QUEUE_DEF_INIT(batQueue, 10, int16_t, static);
+CL_QUEUE_DEF_INIT(batQueue, 100, int16_t, static);
 static int16_t BatFilter(int16_t batVal)
 {
     static int16_t sum = 0;
@@ -138,7 +138,7 @@ static int16_t BatFilter(int16_t batVal)
     return res;
 }
 
-CL_QUEUE_DEF_INIT(chargeQueue, 10, int16_t, static);
+CL_QUEUE_DEF_INIT(chargeQueue, 100, int16_t, static);
 static int16_t ChargeFilter(int16_t adcVal)
 {
     static int16_t sum = 0;
