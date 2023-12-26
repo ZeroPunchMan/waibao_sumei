@@ -13,3 +13,4 @@ void Adc_Process(void);
 
 int16_t GetAdcResult(AdcChannel_t chan);
 int16_t GetBatteryAdc(void);
+int16_t GetChargeAdc(void);

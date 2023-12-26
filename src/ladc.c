@@ -117,54 +117,50 @@ void Adc_Init(void)
 }
 
 static int16_t batAdcLastSec = 0;
-static void BatAdcFilter(void)
+static int16_t chgAdcLastSec = 0;
+static void SocAdcFilter(void)
 {
     static uint32_t batAdcTime = 0;
     static int16_t batMaxAdc = INT16_MIN;
+    static int16_t chgAdcMin = INT16_MAX;
+    static int16_t chgAdcMax = INT16_MIN;
+
     if (SysTimeSpan(batAdcTime) < 300)
     {
-        int16_t curAdc = GetAdcResult(AdcChan_Battery1);
-        if (curAdc > batMaxAdc)
-            batMaxAdc = curAdc;
+        int16_t adcResult = GetAdcResult(AdcChan_Battery1);
+        if (adcResult > batMaxAdc)
+            batMaxAdc = adcResult;
+
+        adcResult = GetAdcResult(AdcChan_Current);
+        if (adcResult > chgAdcMax)
+            chgAdcMax = adcResult;
+
+        if (adcResult < chgAdcMin)
+            chgAdcMin = adcResult;
     }
     else
     {
         batAdcLastSec = batMaxAdc;
-        batMaxAdc = INT16_MIN;
-        batAdcTime = GetSysTime();
-    }
-}
-
-static int16_t chgAdcMin = INT16_MAX;
-static int16_t chgAdcMax = INT16_MIN;
-static void ChargeAdcFilter(void)
-{
-    static uint32_t windowTime = 0;
-    if(SysTimeSpan(windowTime) < 1000)
-    {
-        int16_t curAdc = GetAdcResult(AdcChan_Current);
-        if(curAdc > chgAdcMax)
-            chgAdcMax = curAdc;
+        chgAdcLastSec = (chgAdcMax + chgAdcMin) / 2;
         
-        if(curAdc < chgAdcMin)
-            chgAdcMin = curAdc;
-    }
-    else
-    {
-        CL_LOG("chg: %d, %d", chgAdcMin, chgAdcMax);
+        batMaxAdc = INT16_MIN;
         chgAdcMin = INT16_MAX;
         chgAdcMax = INT16_MIN;
-        windowTime = GetSysTime();
+        batAdcTime = GetSysTime();
     }
 }
 
 void Adc_Process(void)
 {
-    BatAdcFilter();
-    ChargeAdcFilter();
+    SocAdcFilter();
 }
 
 int16_t GetBatteryAdc(void)
 {
     return batAdcLastSec;
+}
+
+int16_t GetChargeAdc(void)
+{
+    return chgAdcLastSec;
 }

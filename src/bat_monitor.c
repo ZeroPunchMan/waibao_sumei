@@ -101,11 +101,11 @@ typedef struct
 } batStageDef_t;
 
 static const batStageDef_t batStageDef[5] = {
-    {.minAdc = VOLTAGE_TO_ADC(3.45f / 2), .maxAdc = VOLTAGE_TO_ADC(3.75f / 2)},  // 0
-    {.minAdc = VOLTAGE_TO_ADC(3.72f / 2), .maxAdc = VOLTAGE_TO_ADC(3.81f / 2)},   // 1
+    {.minAdc = VOLTAGE_TO_ADC(3.45f / 2), .maxAdc = VOLTAGE_TO_ADC(3.75f / 2)}, // 0
+    {.minAdc = VOLTAGE_TO_ADC(3.72f / 2), .maxAdc = VOLTAGE_TO_ADC(3.81f / 2)}, // 1
     {.minAdc = VOLTAGE_TO_ADC(3.78f / 2), .maxAdc = VOLTAGE_TO_ADC(3.89f / 2)}, // 2
-    {.minAdc = VOLTAGE_TO_ADC(3.86f / 2), .maxAdc = VOLTAGE_TO_ADC(4.02f / 2)},  // 3
-    {.minAdc = VOLTAGE_TO_ADC(3.99f / 2), .maxAdc = VOLTAGE_TO_ADC(4.2f / 2)},   // 4
+    {.minAdc = VOLTAGE_TO_ADC(3.86f / 2), .maxAdc = VOLTAGE_TO_ADC(4.02f / 2)}, // 3
+    {.minAdc = VOLTAGE_TO_ADC(3.99f / 2), .maxAdc = VOLTAGE_TO_ADC(4.2f / 2)},  // 4
 };
 
 static void DoUpdateStage(uint16_t adcVal)
@@ -165,8 +165,13 @@ void BatMonitor_Process(void)
         extVolAdc = GetAdcResult(AdcChan_ExtVol);
 
         int16_t batAdc = GetBatteryAdc();
-        // todo 减去充电压差
-        UpdateBatStage(batAdc); // todo review
+        // 减去充电压差
+        int16_t chgAdc = GetChargeAdc();
+        if (chgAdc > 1)
+            batAdc -= chgAdc * 2;
+
+        UpdateBatStage(batAdc);
+        CL_LOG("soc adc: %d", batAdc);
     }
 }
 
