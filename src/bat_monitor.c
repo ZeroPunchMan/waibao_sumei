@@ -104,8 +104,8 @@ static const batStageDef_t batStageDef[5] = {
     {.minAdc = VOLTAGE_TO_ADC(3.45f / 2), .maxAdc = VOLTAGE_TO_ADC(3.75f / 2)}, // 0
     {.minAdc = VOLTAGE_TO_ADC(3.72f / 2), .maxAdc = VOLTAGE_TO_ADC(3.81f / 2)}, // 1
     {.minAdc = VOLTAGE_TO_ADC(3.78f / 2), .maxAdc = VOLTAGE_TO_ADC(3.89f / 2)}, // 2
-    {.minAdc = VOLTAGE_TO_ADC(3.86f / 2), .maxAdc = VOLTAGE_TO_ADC(4.02f / 2)}, // 3
-    {.minAdc = VOLTAGE_TO_ADC(3.99f / 2), .maxAdc = VOLTAGE_TO_ADC(4.2f / 2)},  // 4
+    {.minAdc = VOLTAGE_TO_ADC(3.86f / 2), .maxAdc = VOLTAGE_TO_ADC(4.05f / 2)}, // 3
+    {.minAdc = VOLTAGE_TO_ADC(4.02f / 2), .maxAdc = VOLTAGE_TO_ADC(4.2f / 2)},  // 4
 };
 
 static void DoUpdateStage(uint16_t adcVal)
@@ -170,12 +170,12 @@ void BatMonitor_Process(void)
         if (chgAdc > 1)
         {
             UpdateBatStage(batAdc - chgAdc * 2.15f);
-            CL_LOG("soc: %d", batAdc - chgAdc * 2.15f);
+            CL_LOG("soc1: %d", batAdc - chgAdc * 2.15f);
         }
         else
         {
             UpdateBatStage(batAdc);
-            CL_LOG("soc: %d", batAdc);
+            CL_LOG("soc2: %d", batAdc);
         }
 
         // CL_LOG("adc: %d, %d, %d", chgAdc, batAdc, batAdc - chgAdc * 2.15f);
