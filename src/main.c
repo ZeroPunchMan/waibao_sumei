@@ -635,11 +635,11 @@ int main(void)
         {
             lastTime = GetSysTime();
             // NRF_LOG_INFO("%llds", GetSysTime() / 1000);
-            NRF_LOG_INFO("adc: %d, %d, %d, %d",
-                         GetAdcResult(AdcChan_Current),
-                         GetAdcResult(AdcChan_ExtVol),
-                         GetBatteryAdc(),
-                         GetAdcResult(AdcChan_Battery1));
+            // NRF_LOG_INFO("adc: %d, %d, %d, %d",
+            //              GetChargeAdc(),
+            //              GetAdcResult(AdcChan_ExtVol),
+            //              GetBatteryAdc(),
+            //              GetAdcResult(AdcChan_Battery1));
         }
 
         Led_Process();

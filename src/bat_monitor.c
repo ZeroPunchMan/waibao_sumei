@@ -164,14 +164,21 @@ void BatMonitor_Process(void)
 
         extVolAdc = GetAdcResult(AdcChan_ExtVol);
 
+        int16_t chgAdc = GetChargeAdc();
         int16_t batAdc = GetBatteryAdc();
         // 减去充电压差
-        int16_t chgAdc = GetChargeAdc();
         if (chgAdc > 1)
-            batAdc -= chgAdc * 2;
+        {
+            UpdateBatStage(batAdc - chgAdc * 2.15f);
+            CL_LOG("soc: %d", batAdc - chgAdc * 2.15f);
+        }
+        else
+        {
+            UpdateBatStage(batAdc);
+            CL_LOG("soc: %d", batAdc);
+        }
 
-        UpdateBatStage(batAdc);
-        CL_LOG("soc adc: %d", batAdc);
+        // CL_LOG("adc: %d, %d, %d", chgAdc, batAdc, batAdc - chgAdc * 2.15f);
     }
 }
 

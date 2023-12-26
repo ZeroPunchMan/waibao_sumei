@@ -7,6 +7,7 @@
 #include "ladc.h"
 #include "systime.h"
 #include "cl_log.h"
+#include "cl_queue.h"
 
 static nrf_saadc_value_t adcResult[4];
 int16_t GetAdcResult(AdcChannel_t chan)
@@ -87,7 +88,7 @@ void saadc_sampling_event_init(void)
     APP_ERROR_CHECK(err_code);
 
     /* setup m_timer for compare event */
-    uint32_t ticks = nrf_drv_timer_ms_to_ticks(&m_timer, 1000 / 500);
+    uint32_t ticks = nrf_drv_timer_ms_to_ticks(&m_timer, 1000 / 100);
     nrf_drv_timer_extended_compare(&m_timer, NRF_TIMER_CC_CHANNEL0, ticks, NRF_TIMER_SHORT_COMPARE0_CLEAR_MASK, false);
     nrf_drv_timer_enable(&m_timer);
 
@@ -116,37 +117,69 @@ void Adc_Init(void)
     saadc_sampling_event_enable();
 }
 
+CL_QUEUE_DEF_INIT(batQueue, 10, int16_t, static);
+static int16_t BatFilter(int16_t batVal)
+{
+    static int16_t sum = 0;
+    if (batVal > 1023)
+        batVal = 1023;
+
+    if (CL_QueueFull(&batQueue))
+    {
+        int16_t oldVal;
+        CL_QueuePoll(&batQueue, &oldVal);
+        sum -= oldVal;
+    }
+
+    CL_QueueAdd(&batQueue, &batVal);
+    sum += batVal;
+
+    int16_t res = sum / CL_QueueLength(&batQueue);
+    return res;
+}
+
+CL_QUEUE_DEF_INIT(chargeQueue, 10, int16_t, static);
+static int16_t ChargeFilter(int16_t adcVal)
+{
+    static int16_t sum = 0;
+    if (adcVal > 1023)
+        adcVal = 1023;
+
+    if (CL_QueueFull(&chargeQueue))
+    {
+        int16_t oldVal;
+        CL_QueuePoll(&chargeQueue, &oldVal);
+        sum -= oldVal;
+    }
+
+    CL_QueueAdd(&chargeQueue, &adcVal);
+    sum += adcVal;
+
+    // if(!CL_QueueFull(&chargeQueue))
+    // {
+    //     return false;
+    // }
+
+    int16_t mean = sum / CL_QueueLength(&chargeQueue);
+
+    return mean;
+}
+
 static int16_t batAdcLastSec = 0;
 static int16_t chgAdcLastSec = 0;
 static void SocAdcFilter(void)
 {
     static uint32_t batAdcTime = 0;
-    static int16_t batMaxAdc = INT16_MIN;
-    static int16_t chgAdcMin = INT16_MAX;
-    static int16_t chgAdcMax = INT16_MIN;
 
-    if (SysTimeSpan(batAdcTime) < 300)
+    if (SysTimeSpan(batAdcTime) >= 5)
     {
-        int16_t adcResult = GetAdcResult(AdcChan_Battery1);
-        if (adcResult > batMaxAdc)
-            batMaxAdc = adcResult;
-
-        adcResult = GetAdcResult(AdcChan_Current);
-        if (adcResult > chgAdcMax)
-            chgAdcMax = adcResult;
-
-        if (adcResult < chgAdcMin)
-            chgAdcMin = adcResult;
-    }
-    else
-    {
-        batAdcLastSec = batMaxAdc;
-        chgAdcLastSec = (chgAdcMax + chgAdcMin) / 2;
-        
-        batMaxAdc = INT16_MIN;
-        chgAdcMin = INT16_MAX;
-        chgAdcMax = INT16_MIN;
         batAdcTime = GetSysTime();
+        // int16_t batAdc = GetAdcResult(AdcChan_Battery1);
+        // int16_t chgAdc = GetAdcResult(AdcChan_Current);
+
+        batAdcLastSec = BatFilter(GetAdcResult(AdcChan_Battery1));
+        chgAdcLastSec = ChargeFilter(GetAdcResult(AdcChan_Current));
+        // CL_LOG("adc: %d, %d", batAdc, chgAdc);
     }
 }
 
